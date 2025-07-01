@@ -21,7 +21,7 @@ export default function Hero() {
           className="inline-block px-4 py-2 mb-6 bg-indigo-50 rounded-full"
         >
           <span className="text-sm font-medium text-indigo-600">
-            Platform Interaktif SiTeliti
+            Platform Interaktif TeliKata
           </span>
         </motion.div>
 
@@ -42,7 +42,7 @@ export default function Hero() {
                 "Interaktif",
                 "Seru",
                 "Mudah",
-                "SiTeliti",
+                "TeliKata",
               ]}
               loop
               cursor
@@ -61,7 +61,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto"
         >
-          SiTeliti adalah platform edukatif yang melatih kemampuan membaca,
+          TeliKata adalah platform edukatif yang melatih kemampuan membaca,
           mengenali kesalahan tata bahasa, dan meningkatkan ketelitian secara
           interaktif — tanpa rasa bosan.
         </motion.p>

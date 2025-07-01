@@ -3,9 +3,12 @@ export default function Footer() {
     <footer className="border-t border-gray-200 py-10">
       <div className="max-w-3xl mx-auto px-4 text-center">
         <div className="mb-4">
-          <h3 className="text-xl font-bold text-gray-800">
-            Si<span className="text-indigo-600">Teliti</span>
-          </h3>
+          <span className="text-xl font-extrabold text-gray-900">
+            Teli
+            <span className="text-indigo-600">
+              Kata
+            </span>
+          </span>
           <p className="text-sm text-gray-500 mt-1">
             Platform edukatif interaktif untuk menguji dan melatih ketelitian
             bahasa Indonesia.
@@ -25,7 +28,7 @@ export default function Footer() {
         </div>
 
         <p className="text-xs text-gray-400">
-          &copy; {new Date().getFullYear()} SiTeliti. All rights reserved.
+          &copy; {new Date().getFullYear()} TeliKata. All rights reserved.
         </p>
       </div>
     </footer>

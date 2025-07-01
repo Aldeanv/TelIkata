@@ -35,10 +35,12 @@ export default function PurposeSection() {
           transition={{ duration: 0.5 }}
           className="text-3xl md:text-4xl font-bold text-gray-900 mb-6"
         >
-          Tujuan & Manfaat SiTeliti
+          Tujuan & Manfaat TeliKata
         </motion.h2>
         <p className="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
-          SiTeliti dirancang untuk menjadi media interaktif yang membantu siapa saja — pelajar, guru, hingga orang tua — meningkatkan kemampuan berbahasa Indonesia dengan cara menyenangkan.
+          TeliKata dirancang untuk menjadi media interaktif yang membantu siapa
+          saja — pelajar, guru, hingga orang tua — meningkatkan kemampuan
+          berbahasa Indonesia dengan cara menyenangkan.
         </p>
 
         <div className="grid gap-8 md:grid-cols-3 text-left">
