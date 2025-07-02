@@ -74,7 +74,7 @@ export default function Hero() {
           className="flex justify-center"
         >
           <a
-            href="/latihan/[mode]/[level]"
+            href="/Telikata/[mode]/[level]"
             className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-indigo-200 flex items-center gap-2"
           >
             <svg
