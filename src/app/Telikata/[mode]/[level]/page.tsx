@@ -5,14 +5,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const difficulties = ["Mudah", "Menengah", "Sulit"] as const;
-const challengeDurations = [3, 5, 10] as const;
+const challengeDurations = [1, 2, 3] as const;
 
 type Mode = "normal" | "challenge";
-type Difficulty = typeof difficulties[number];
+type Difficulty = (typeof difficulties)[number];
 
 export default function ModeSelectionPage() {
   const [selectedMode, setSelectedMode] = useState<Mode>("normal");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("Mudah");
+  const [selectedDifficulty, setSelectedDifficulty] =
+    useState<Difficulty>("Mudah");
   const [selectedTime, setSelectedTime] = useState<number>(3);
 
   return (
@@ -33,7 +34,10 @@ export default function ModeSelectionPage() {
             onSelectDifficulty={setSelectedDifficulty}
           />
         ) : (
-          <ChallengeModeSection selectedTime={selectedTime} onSelectTime={setSelectedTime} />
+          <ChallengeModeSection
+            selectedTime={selectedTime}
+            onSelectTime={setSelectedTime}
+          />
         )}
 
         <Link
@@ -50,15 +54,24 @@ export default function ModeSelectionPage() {
 function Header() {
   return (
     <div className="text-center space-y-1">
-      <h1 className="text-3xl font-bold text-gray-900">Tes Ketelitian Membaca</h1>
+      <h1 className="text-3xl font-bold text-gray-900">
+        Tes Ketelitian Membaca
+      </h1>
       <p className="text-gray-600">
-        Pilih mode dan tingkat kesulitan untuk menguji seberapa teliti kamu menemukan kesalahan dalam teks.
+        Pilih mode dan tingkat kesulitan untuk menguji seberapa teliti kamu
+        menemukan kesalahan dalam teks.
       </p>
     </div>
   );
 }
 
-function ModeTabs({ selected, onSelect }: { selected: Mode; onSelect: (m: Mode) => void }) {
+function ModeTabs({
+  selected,
+  onSelect,
+}: {
+  selected: Mode;
+  onSelect: (m: Mode) => void;
+}) {
   const modes: Mode[] = ["normal", "challenge"];
 
   return (
@@ -88,13 +101,21 @@ function NormalModeSection({
   onSelectDifficulty: (d: Difficulty) => void;
 }) {
   const descriptions: Record<Difficulty, string> = {
-    Mudah: "Teks pendek dengan 3–5 kesalahan. Cocok untuk pemula atau pemanasan.",
-    Menengah: "Teks sedang dengan 6–8 kesalahan. Cocok untuk latihan fokus dan akurasi.",
-    Sulit: "Teks panjang tanpa informasi jumlah kesalahan. Cocok untuk penguji ketelitian tingkat lanjut.",
+    Mudah:
+      "Teks pendek dengan 3–5 kesalahan. Cocok untuk pemula atau pemanasan.",
+    Menengah:
+      "Teks sedang dengan 6–8 kesalahan. Cocok untuk latihan fokus dan akurasi.",
+    Sulit:
+      "Teks panjang tanpa informasi jumlah kesalahan. Cocok untuk penguji ketelitian tingkat lanjut.",
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
       <h2 className="text-lg font-semibold text-gray-800">Tingkat Kesulitan</h2>
       <div className="grid grid-cols-3 gap-3">
         {difficulties.map((dif) => (
@@ -120,9 +141,21 @@ function NormalModeSection({
         </div>
 
         <div className="space-y-3">
-          <Feature icon="🖱️" title="Klik-Kata Aktif" desc="Semua kata bisa diklik untuk dikoreksi. Hanya koreksi yang benar yang dihitung sebagai skor." />
-          <Feature icon="⏱️" title="Timer Otomatis" desc="Waktu dihitung sejak teks muncul. Hasilmu akan menunjukkan kecepatan dan akurasi." />
-          <Feature icon="📊" title="Evaluasi Visual" desc="Setelah selesai, kamu bisa melihat kata mana saja yang kamu sentuh, benar atau salah." />
+          <Feature
+            icon="🖱️"
+            title="Klik-Kata Aktif"
+            desc="Semua kata bisa diklik untuk dikoreksi. Hanya koreksi yang benar yang dihitung sebagai skor."
+          />
+          <Feature
+            icon="⏱️"
+            title="Timer Otomatis"
+            desc="Waktu dihitung sejak teks muncul. Hasilmu akan menunjukkan kecepatan dan akurasi."
+          />
+          <Feature
+            icon="📊"
+            title="Evaluasi Visual"
+            desc="Setelah selesai, kamu bisa melihat kata mana saja yang kamu sentuh, benar atau salah."
+          />
         </div>
       </div>
 
@@ -144,8 +177,15 @@ function ChallengeModeSection({
   onSelectTime: (t: number) => void;
 }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-6">
-      <h2 className="text-lg font-semibold text-gray-800">Pilih Durasi Challenge</h2>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
+      <h2 className="text-lg font-semibold text-gray-800">
+        Pilih Durasi Challenge
+      </h2>
       <div className="grid grid-cols-3 gap-3">
         {challengeDurations.map((min) => (
           <motion.button
@@ -166,18 +206,34 @@ function ChallengeModeSection({
 
       <div className="space-y-4 text-gray-700">
         <div className="p-4 bg-pink-50 rounded-lg font-medium">
-          Temukan dan perbaiki sebanyak mungkin kesalahan dalam waktu {selectedTime} menit. Tidak ada bantuan, tidak ada petunjuk.
+          Temukan dan perbaiki sebanyak mungkin kesalahan dalam waktu{" "}
+          {selectedTime} menit. Tidak ada bantuan, tidak ada petunjuk.
         </div>
 
         <div className="space-y-3">
-          <Feature icon="🔒" color="pink" title="Tanpa Petunjuk" desc="Kamu tidak diberi tahu jumlah kesalahan. Fokus dan teliti adalah kunci." />
-          <Feature icon="⏳" color="pink" title="Waktu Terbatas" desc="Tes akan berakhir otomatis setelah waktu habis." />
-          <Feature icon="📈" color="pink" title="Skor Akhir" desc="Kamu akan mendapatkan skor akurasi dan kecepatan di akhir challenge." />
+          <Feature
+            icon="🔒"
+            color="pink"
+            title="Tanpa Petunjuk"
+            desc="Kamu tidak diberi tahu jumlah kesalahan. Fokus dan teliti adalah kunci."
+          />
+          <Feature
+            icon="⏳"
+            color="pink"
+            title="Waktu Terbatas"
+            desc="Tes akan berakhir otomatis setelah waktu habis."
+          />
+          <Feature
+            icon="📈"
+            color="pink"
+            title="Skor Akhir"
+            desc="Kamu akan mendapatkan skor akurasi dan kecepatan di akhir challenge."
+          />
         </div>
       </div>
 
       <Link
-        href={`/Telikata/challenge/${selectedTime}`}
+        href={`/Telikata/challenge?duration=${selectedTime}`}
         className="block w-full py-3 bg-pink-500 text-white text-center font-medium rounded-lg hover:bg-pink-600 transition shadow-md hover:shadow-lg"
       >
         Mulai Challenge
