@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, easeOut  } from "framer-motion";
 import {
   FileText,
   Loader2,
@@ -12,7 +12,7 @@ import {
   Clock,
   ChevronRight,
 } from "lucide-react";
-import { sampleBank, Difficulty } from "@/data/test";
+import { sampleBank, Difficulty, Correction } from "@/data/test";
 
 // Helper functions
 const formatTime = (seconds: number) => {
@@ -52,7 +52,7 @@ const progressBarVariants = {
   initial: { width: 0 },
   animate: (percentage: number) => ({
     width: `${percentage}%`,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.5, ease: easeOut },
   }),
 };
 
@@ -241,7 +241,7 @@ export default function TestPage() {
   };
 
   const renderCorrectionExplanation = (
-    [idx, item]: [string, any],
+    [idx, item]: [string, Correction],
     i: number
   ) => {
     const index = Number(idx);
@@ -314,7 +314,7 @@ export default function TestPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text"
           >
             Tes Ketelitian Bahasa
           </motion.h1>
