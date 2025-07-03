@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
@@ -13,9 +13,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { sampleBank, Difficulty } from "@/data/test";
-
-const level: Difficulty = "menengah";
-const samples = sampleBank[level];
 
 // Helper functions
 const formatTime = (seconds: number) => {
@@ -85,6 +82,13 @@ export default function TestPage() {
   const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [finished, setFinished] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const searchParams = useSearchParams();
+  const rawLevel = searchParams.get("level") as Difficulty | null;
+  const isValidLevel = (value: string | null): value is Difficulty =>
+    ["mudah", "menengah", "sulit"].includes(value ?? "");
+
+  const level: Difficulty = isValidLevel(rawLevel) ? rawLevel : "mudah";
+  const samples = sampleBank[level];
 
   // Initialize test
   useEffect(() => {
@@ -95,7 +99,7 @@ export default function TestPage() {
     };
 
     loadTest();
-  }, []);
+  }, [samples.length]);
 
   // Timer effect
   useEffect(() => {
@@ -180,7 +184,7 @@ export default function TestPage() {
       original: sample.original,
       corrected: correctedText,
       explanations,
-      difficulty: "Menengah",
+      difficulty: "Mudah",
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
@@ -569,3 +573,4 @@ export default function TestPage() {
     </div>
   );
 }
+

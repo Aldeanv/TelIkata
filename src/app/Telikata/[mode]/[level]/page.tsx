@@ -160,7 +160,7 @@ function NormalModeSection({
       </div>
 
       <Link
-        href={`/Telikata/normal/${selectedDifficulty.toLowerCase()}`}
+        href={`/Telikata/normal?level=${selectedDifficulty.toLowerCase()}`}
         className="block w-full py-3 bg-blue-500 text-white text-center font-medium rounded-lg hover:bg-blue-600 transition shadow-md hover:shadow-lg"
       >
         Mulai Tes
