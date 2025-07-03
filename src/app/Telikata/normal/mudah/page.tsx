@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText } from "lucide-react";
+import { FileText, Loader2, ChevronUp, ChevronDown, ArrowLeft, Clock, ChevronRight } from "lucide-react";
 
-const samples = [
+// Sample data moved to a separate constant
+const SAMPLES = [
   {
     original:
       "Kemarin saya berbelanja dipasar dan membeli sayur, buah dan ikan segar. Penjualnya ramah dan harga-harga disana lebih murah darlpada supermarket. Saya senang sekali belanja disitu.",
@@ -24,8 +25,7 @@ const samples = [
       },
       18: {
         correct: ["daripada"],
-        explanation:
-          "Penulisan yang benar adalah 'daripada', bukan 'darlpada'.",
+        explanation: "Penulisan yang benar adalah 'daripada', bukan 'darlpada'.",
       },
       24: {
         correct: ["di", "situ."],
@@ -35,13 +35,71 @@ const samples = [
   },
 ];
 
+// Helper functions
+const formatTime = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+};
+
+// Animation variants
+const wordVariants = {
+  initial: { scale: 1 },
+  hover: { scale: 1.05 },
+  tap: { scale: 0.95 },
+  correct: {
+    scale: [1, 1.1, 1],
+    backgroundColor: "#D1FAE5",
+    color: "#065F46",
+    transition: { duration: 0.3 },
+  },
+  incorrect: {
+    scale: [1, 1.1, 1],
+    backgroundColor: "#FEE2E2",
+    color: "#B91C1C",
+    transition: { duration: 0.3 },
+  },
+};
+
+const inputVariants = {
+  focus: {
+    boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)",
+    borderColor: "#2563EB",
+    transition: { duration: 0.2 },
+  },
+};
+
+const progressBarVariants = {
+  initial: { width: 0 },
+  animate: (percentage: number) => ({
+    width: `${percentage}%`,
+    transition: { duration: 0.5, ease: "easeOut" },
+  }),
+};
+
+const hintVariants = {
+  hidden: { opacity: 0, height: 0 },
+  visible: {
+    opacity: 1,
+    height: "auto",
+    transition: {
+      opacity: { duration: 0.2 },
+      height: { duration: 0.3 },
+    },
+  },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
+
 export default function TestPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [sampleIndex, setSampleIndex] = useState<number | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [corrections, setCorrections] = useState<{ [index: number]: string }>(
-    {}
-  );
+  const [corrections, setCorrections] = useState<{ [index: number]: string }>({});
   const [feedback, setFeedback] = useState<{ [index: number]: boolean }>({});
   const [clickedWords, setClickedWords] = useState<number[]>([]);
   const [timer, setTimer] = useState(0);
@@ -49,11 +107,18 @@ export default function TestPage() {
   const [finished, setFinished] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+  // Initialize test
   useEffect(() => {
-    const index = Math.floor(Math.random() * samples.length);
-    setSampleIndex(index);
+    const loadTest = () => {
+      const index = Math.floor(Math.random() * SAMPLES.length);
+      setSampleIndex(index);
+      setTimeout(() => setIsLoading(false), 1000); // Simulate loading
+    };
+
+    loadTest();
   }, []);
 
+  // Timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isTimerRunning) {
@@ -62,15 +127,36 @@ export default function TestPage() {
     return () => clearInterval(interval);
   }, [isTimerRunning]);
 
-  if (sampleIndex === null) return null;
-  const sample = samples[sampleIndex];
+  if (isLoading || sampleIndex === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-indigo-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center"
+        >
+          <Loader2 className="h-12 w-12 text-blue-600 animate-spin mb-4" />
+          <p className="text-lg text-gray-600">Mempersiapkan tes...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const sample = SAMPLES[sampleIndex];
   const originalWords = sample.original.split(" ");
+  const totalErrors = Object.keys(sample.corrections).length;
+  const correctedCount = Object.values(feedback).filter(Boolean).length;
+  const remainingErrors = totalErrors - correctedCount;
+  const progressPercentage = (correctedCount / totalErrors) * 100;
 
   const handleWordClick = (index: number) => {
     if (!isTimerRunning || finished) return;
-    if (!clickedWords.includes(index)) {
-      setClickedWords((prev) => [...prev, index]);
-    }
+    
+    setClickedWords((prev) => 
+      prev.includes(index) ? prev : [...prev, index]
+    );
+    
     if (sample.corrections[index]) {
       setEditingIndex(index);
     }
@@ -81,6 +167,7 @@ export default function TestPage() {
     const correction = sample.corrections[editingIndex];
     const expected = correction.correct.join(" ");
     const isCorrect = value.trim() === expected;
+    
     setCorrections((prev) => ({ ...prev, [editingIndex]: value }));
     setFeedback((prev) => ({ ...prev, [editingIndex]: isCorrect }));
   };
@@ -89,35 +176,26 @@ export default function TestPage() {
     setIsTimerRunning(false);
     setFinished(true);
 
-    const totalErrors = Object.keys(sample.corrections).length;
-    const correct = Object.values(feedback).filter(Boolean).length;
-
     const correctedText = originalWords
-      .map((word, index) => {
-        const userCorrection = corrections[index];
-        const isCorrect = feedback[index];
-        return isCorrect ? userCorrection : word;
-      })
+      .map((word, index) => feedback[index] ? corrections[index] : word)
       .join(" ");
 
     const explanations = Object.entries(sample.corrections)
       .map(([indexStr, info]) => {
         const index = parseInt(indexStr);
-        const isCorrect = feedback[index];
-        if (!isCorrect) return null;
-        return {
+        return feedback[index] ? {
           index,
           wrong: originalWords[index],
           correct: info.correct.join(" "),
           explanation: info.explanation,
-        };
+        } : null;
       })
       .filter(Boolean);
 
     const resultData = {
       time: timer,
       totalErrors,
-      correct,
+      correct: correctedCount,
       clicked: clickedWords.length,
       totalWords: originalWords.length,
       original: sample.original,
@@ -128,95 +206,108 @@ export default function TestPage() {
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
 
-    setTimeout(() => {
-      router.push("/result");
-    }, 500);
+    setTimeout(() => router.push("/result"), 500);
   };
 
-  const remainingErrors =
-    Object.keys(sample.corrections).length -
-    Object.values(feedback).filter(Boolean).length;
+  const renderWord = (word: string, index: number) => {
+    const isEditing = editingIndex === index;
+    const userCorrection = corrections[index];
+    const isCorrect = feedback[index];
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    return (
+      <motion.span
+        key={index}
+        variants={wordVariants}
+        initial="initial"
+        whileHover={!isEditing ? "hover" : {}}
+        whileTap={!isEditing ? "tap" : {}}
+        animate={
+          isCorrect ? "correct" : 
+          userCorrection && !isCorrect ? "incorrect" : 
+          "initial"
+        }
+        onClick={() => handleWordClick(index)}
+        className={`relative cursor-pointer rounded-md transition
+          ${isCorrect ? "text-emerald-800" : ""}
+          ${userCorrection && !isCorrect ? "text-red-800" : ""}
+          ${!userCorrection && !isCorrect ? "hover:bg-blue-50 text-gray-800" : ""}
+        `}
+      >
+        {isEditing ? (
+          <motion.input
+            autoFocus
+            value={userCorrection ?? word}
+            onChange={(e) => handleChange(e.target.value)}
+            onBlur={() => setEditingIndex(null)}
+            onKeyDown={(e) => e.key === "Enter" && setEditingIndex(null)}
+            className="bg-white border-2 border-blue-400 rounded px-2 py-1 text-base focus:ring-2 focus:ring-blue-200 focus:outline-none transition min-w-[50px]"
+            variants={inputVariants}
+            whileFocus="focus"
+          />
+        ) : (
+          <span>{userCorrection ?? word}</span>
+        )}
+      </motion.span>
+    );
   };
 
-  // Animation variants
-  const wordVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.05 },
-    tap: { scale: 0.95 },
-    correct: {
-      scale: [1, 1.1, 1],
-      backgroundColor: "#D1FAE5",
-      color: "#065F46",
-      transition: { duration: 0.3 },
-    },
-    incorrect: {
-      scale: [1, 1.1, 1],
-      backgroundColor: "#FEE2E2",
-      color: "#B91C1C",
-      transition: { duration: 0.3 },
-    },
-  };
+  const renderCorrectionExplanation = ([idx, item]: [string, any], i: number) => {
+    const index = Number(idx);
+    if (!feedback[index]) return null;
 
-  const inputVariants = {
-    focus: {
-      boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)",
-      borderColor: "#2563EB",
-      transition: { duration: 0.2 },
-    },
-  };
-
-  const progressBarVariants = {
-    initial: { width: 0 },
-    animate: {
-      width: `${
-        (Object.values(feedback).filter(Boolean).length /
-          Object.keys(sample.corrections).length) *
-        100
-      }%`,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
-
-  const hintVariants = {
-    hidden: { opacity: 0, height: 0 },
-    visible: {
-      opacity: 1,
-      height: "auto",
-      transition: {
-        opacity: { duration: 0.2 },
-        height: { duration: 0.3 },
-      },
-    },
+    return (
+      <motion.div
+        key={idx}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: i * 0.1 }}
+        className="border border-gray-200 rounded-lg p-4 flex items-start space-x-4"
+      >
+        <div className="h-6 w-6 flex items-center justify-center bg-indigo-100 text-indigo-600 font-medium rounded-full text-xs">
+          {i + 1}
+        </div>
+        <div className="flex-1 text-sm">
+          <div className="space-y-2">
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm font-medium text-gray-500">Kata salah:</span>
+              <motion.span
+                className="text-sm font-medium bg-red-50 text-red-700 px-2 py-1 rounded"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500 }}
+              >
+                {originalWords[index]}
+              </motion.span>
+              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <span className="text-sm font-medium text-gray-500">Koreksi:</span>
+              <motion.span
+                className="text-sm font-medium bg-green-50 text-green-700 px-2 py-1 rounded"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
+              >
+                {item.correct.join(" ")}
+              </motion.span>
+            </div>
+            <div className="text-sm text-gray-700">
+              <span className="font-medium text-gray-600">Penjelasan:</span> {item.explanation}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    );
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 py-8 sm:px-6 relative">
-      {/* Floating Back Button */}
+      {/* Back Button */}
       <motion.button
         onClick={() => router.back()}
         className="fixed top-6 left-6 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-gray-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
+        <ArrowLeft className="h-6 w-6 text-gray-600" />
       </motion.button>
 
       <div className="max-w-6xl mx-auto">
@@ -262,61 +353,13 @@ export default function TestPage() {
               </div>
 
               <div className="flex flex-wrap gap-2 text-base leading-relaxed p-4 bg-gray-50 rounded-lg">
-                {originalWords.map((word, index) => {
-                  const isEditing = editingIndex === index;
-                  const userCorrection = corrections[index];
-                  const isCorrect = feedback[index];
-
-                  return (
-                    <motion.span
-                      key={index}
-                      variants={wordVariants}
-                      initial="initial"
-                      whileHover={!isEditing ? "hover" : {}}
-                      whileTap={!isEditing ? "tap" : {}}
-                      animate={
-                        isCorrect
-                          ? "correct"
-                          : userCorrection && !isCorrect
-                          ? "incorrect"
-                          : "initial"
-                      }
-                      onClick={() => handleWordClick(index)}
-                      className={`relative cursor-pointer rounded-md transition
-                        ${isCorrect ? "text-emerald-800" : ""}
-                        ${userCorrection && !isCorrect ? "text-red-800" : ""}
-                        ${
-                          !userCorrection && !isCorrect
-                            ? "hover:bg-blue-50 text-gray-800"
-                            : ""
-                        }
-                      `}
-                    >
-                      {isEditing ? (
-                        <motion.input
-                          autoFocus
-                          value={userCorrection ?? word}
-                          onChange={(e) => handleChange(e.target.value)}
-                          onBlur={() => setEditingIndex(null)}
-                          onKeyDown={(e) =>
-                            e.key === "Enter" && setEditingIndex(null)
-                          }
-                          className="bg-white border-2 border-blue-400 rounded px-2 py-1 text-base focus:ring-2 focus:ring-blue-200 focus:outline-none transition min-w-[50px]"
-                          variants={inputVariants}
-                          whileFocus="focus"
-                        />
-                      ) : (
-                        <span>{userCorrection ?? word}</span>
-                      )}
-                    </motion.span>
-                  );
-                })}
+                {originalWords.map((word, index) => renderWord(word, index))}
               </div>
             </motion.div>
 
             {/* Explanations Panel */}
             <AnimatePresence>
-              {Object.values(feedback).some(Boolean) && (
+              {correctedCount > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: "auto" }}
@@ -340,82 +383,7 @@ export default function TestPage() {
                     </div>
 
                     <div className="space-y-4 mt-4">
-                      {Object.entries(sample.corrections).map(
-                        ([idx, item], i) => {
-                          const index = Number(idx);
-                          const isCorrected = feedback[index];
-                          if (!isCorrected) return null;
-
-                          return (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.1 }}
-                              className="border border-gray-200 rounded-lg p-4 flex items-start space-x-4"
-                            >
-                              <div className="h-6 w-6 flex items-center justify-center bg-indigo-100 text-indigo-600 font-medium rounded-full text-xs">
-                                {i + 1}
-                              </div>
-                              <div className="flex-1 text-sm">
-                                <div className="space-y-2">
-                                  <div className="flex flex-wrap gap-2 items-center">
-                                    <span className="text-sm font-medium text-gray-500">
-                                      Kata salah:
-                                    </span>
-                                    <motion.span
-                                      className="text-sm font-medium bg-red-50 text-red-700 px-2 py-1 rounded"
-                                      initial={{ scale: 0.9 }}
-                                      animate={{ scale: 1 }}
-                                      transition={{
-                                        type: "spring",
-                                        stiffness: 500,
-                                      }}
-                                    >
-                                      {originalWords[index]}
-                                    </motion.span>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-4 w-4 text-gray-400"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                      />
-                                    </svg>
-                                    <span className="text-sm font-medium text-gray-500">
-                                      Koreksi:
-                                    </span>
-                                    <motion.span
-                                      className="text-sm font-medium bg-green-50 text-green-700 px-2 py-1 rounded"
-                                      initial={{ scale: 0.9 }}
-                                      animate={{ scale: 1 }}
-                                      transition={{
-                                        type: "spring",
-                                        stiffness: 500,
-                                        delay: 0.1,
-                                      }}
-                                    >
-                                      {item.correct.join(" ")}
-                                    </motion.span>
-                                  </div>
-                                  <div className="text-sm text-gray-700">
-                                    <span className="font-medium text-gray-600">
-                                      Penjelasan:
-                                    </span>{" "}
-                                    {item.explanation}
-                                  </div>
-                                </div>
-                              </div>
-                            </motion.div>
-                          );
-                        }
-                      )}
+                      {Object.entries(sample.corrections).map(renderCorrectionExplanation)}
                     </div>
                   </div>
                 </motion.div>
@@ -444,26 +412,9 @@ export default function TestPage() {
                 <motion.div
                   className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center"
                   animate={{ rotate: 360 }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 60,
-                    ease: "linear",
-                  }}
+                  transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <Clock className="h-6 w-6 text-blue-500" />
                 </motion.div>
               </div>
             </motion.div>
@@ -483,8 +434,7 @@ export default function TestPage() {
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-gray-600">Kesalahan ditemukan</span>
                     <span className="font-medium">
-                      {Object.values(feedback).filter(Boolean).length}/
-                      {Object.keys(sample.corrections).length}
+                      {correctedCount}/{totalErrors}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -493,7 +443,8 @@ export default function TestPage() {
                       variants={progressBarVariants}
                       initial="initial"
                       animate="animate"
-                    ></motion.div>
+                      custom={progressPercentage}
+                    />
                   </div>
                 </div>
 
@@ -503,7 +454,7 @@ export default function TestPage() {
                     whileHover={{ y: -2 }}
                   >
                     <p className="text-2xl font-bold text-emerald-600">
-                      {Object.values(feedback).filter(Boolean).length}
+                      {correctedCount}
                     </p>
                     <p className="text-xs text-emerald-800">Terkoreksi</p>
                   </motion.div>
@@ -556,38 +507,12 @@ export default function TestPage() {
                   >
                     {showHint ? (
                       <>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 15l7-7 7 7"
-                          />
-                        </svg>
+                        <ChevronUp className="h-4 w-4 mr-1" />
                         Sembunyikan
                       </>
                     ) : (
                       <>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
+                        <ChevronDown className="h-4 w-4 mr-1" />
                         Tampilkan petunjuk
                       </>
                     )}
@@ -645,3 +570,4 @@ export default function TestPage() {
     </div>
   );
 }
+
