@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { Explanation, ResultData } from "@/types/types";
 import {
   Share2,
   RotateCw,
@@ -13,30 +14,7 @@ import {
   Eye,
   FileText,
   Zap,
-  BadgeInfo,
 } from "lucide-react";
-
-interface Explanation {
-  index: number;
-  wrong: string;
-  correct: string;
-  explanation: string;
-}
-
-interface ResultData {
-  time: number;
-  totalErrors: number;
-  correct: number;
-  clicked: number;
-  totalWords: number;
-  original: string;
-  corrected: string;
-  explanations: Explanation[];
-  isChallengeMode?: boolean;
-  timeUp?: boolean;
-  duration?: number;
-  difficulty?: string;
-}
 
 export default function ResultPage() {
   const [result, setResult] = useState<ResultData | null>(null);
@@ -48,7 +26,7 @@ export default function ResultPage() {
       const parsed: ResultData = JSON.parse(stored);
 
       if (!parsed.isChallengeMode && !parsed.difficulty) {
-        const segments = pathname.split("/"); 
+        const segments = pathname.split("/");
         if (segments.length >= 4) {
           parsed.difficulty = segments[3];
         }
@@ -83,10 +61,7 @@ export default function ResultPage() {
     return words.map((word, index) => {
       const isError = errorIndices.includes(index);
       return (
-        <span
-          key={index}
-          className={isError ? "text-red-600 font-medium" : ""}
-        >
+        <span key={index} className={isError ? "text-red-600 font-medium" : ""}>
           {word}{" "}
         </span>
       );
@@ -96,15 +71,7 @@ export default function ResultPage() {
   const renderCorrectedText = () => {
     const words = result.corrected.split(" ");
     return words.map((word, index) => {
-      const isCorrection = errorIndices.includes(index);
-      return (
-        <span
-          key={index}
-          className={isCorrection ? "text-emerald-600 font-medium" : ""}
-        >
-          {word}{" "}
-        </span>
-      );
+      return <span key={index}>{word} </span>;
     });
   };
 
@@ -262,7 +229,7 @@ const StatCard = ({
   icon: React.ReactNode;
   value: string;
   label: string;
-  color: string;
+  color: "blue" | "emerald" | "violet" | "amber"; // <--- Tambahkan ini
 }) => {
   const colorMap = {
     blue: { bg: "bg-blue-50", text: "text-blue-600" },
@@ -295,7 +262,7 @@ const TextCard = ({
   title: string;
   content: React.ReactNode;
   icon: React.ReactNode;
-  badgeColor: string;
+  badgeColor: "gray" | "emerald"; // ← ini perbaikannya
 }) => {
   const colorMap = {
     gray: { bg: "bg-gray-100", text: "text-gray-600" },
@@ -353,4 +320,3 @@ const ExplanationCard = ({
     </div>
   );
 };
-
