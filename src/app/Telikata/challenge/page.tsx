@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Clock, AlertTriangle } from "lucide-react";
+import { sampleBank, Difficulty } from "@/data/test";
 
 // Animation variants
 const wordVariants = {
@@ -32,35 +33,8 @@ const inputVariants = {
   },
 };
 
-const samples = [
-  {
-    original:
-      "Kemarin saya berbelanja dipasar dan membeli sayur, buah dan ikan segar. Penjualnya ramah dan harga-harga disana lebih murah darlpada supermarket. Saya senang sekali belanja disitu.",
-    corrections: {
-      3: {
-        correct: ["di", "pasar"],
-        explanation: "'di pasar' harus dipisah karena 'di' adalah kata depan.",
-      },
-      7: {
-        correct: ["buah,"],
-        explanation: "Gunakan koma sebelum 'dan' dalam daftar.",
-      },
-      15: {
-        correct: ["di", "sana"],
-        explanation: "Penulisan kata depan 'di' harus dipisah: 'di sana'.",
-      },
-      18: {
-        correct: ["daripada"],
-        explanation:
-          "Penulisan yang benar adalah 'daripada', bukan 'darlpada'.",
-      },
-      24: {
-        correct: ["di", "situ."],
-        explanation: "Penulisan yang benar adalah 'di situ', bukan 'disitu'.",
-      },
-    },
-  },
-];
+const level: Difficulty = "challenge";
+const samples = sampleBank[level];
 
 export default function ChallengePage() {
   const router = useRouter();

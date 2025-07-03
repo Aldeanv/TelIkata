@@ -3,37 +3,19 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Loader2, ChevronUp, ChevronDown, ArrowLeft, Clock, ChevronRight } from "lucide-react";
+import {
+  FileText,
+  Loader2,
+  ChevronUp,
+  ChevronDown,
+  ArrowLeft,
+  Clock,
+  ChevronRight,
+} from "lucide-react";
+import { sampleBank, Difficulty } from "@/data/test";
 
-// Sample data moved to a separate constant
-const SAMPLES = [
-  {
-    original:
-      "Kemarin saya berbelanja dipasar dan membeli sayur, buah dan ikan segar. Penjualnya ramah dan harga-harga disana lebih murah darlpada supermarket. Saya senang sekali belanja disitu.",
-    corrections: {
-      3: {
-        correct: ["di", "pasar"],
-        explanation: "'di pasar' harus dipisah karena 'di' adalah kata depan.",
-      },
-      7: {
-        correct: ["buah,"],
-        explanation: "Gunakan koma sebelum 'dan' dalam daftar.",
-      },
-      15: {
-        correct: ["di", "sana"],
-        explanation: "Penulisan kata depan 'di' harus dipisah: 'di sana'.",
-      },
-      18: {
-        correct: ["daripada"],
-        explanation: "Penulisan yang benar adalah 'daripada', bukan 'darlpada'.",
-      },
-      24: {
-        correct: ["di", "situ."],
-        explanation: "Penulisan yang benar adalah 'di situ', bukan 'disitu'.",
-      },
-    },
-  },
-];
+const level: Difficulty = "mudah";
+const samples = sampleBank[level];
 
 // Helper functions
 const formatTime = (seconds: number) => {
@@ -89,17 +71,14 @@ const hintVariants = {
   },
 };
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
-
 export default function TestPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [sampleIndex, setSampleIndex] = useState<number | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [corrections, setCorrections] = useState<{ [index: number]: string }>({});
+  const [corrections, setCorrections] = useState<{ [index: number]: string }>(
+    {}
+  );
   const [feedback, setFeedback] = useState<{ [index: number]: boolean }>({});
   const [clickedWords, setClickedWords] = useState<number[]>([]);
   const [timer, setTimer] = useState(0);
@@ -110,9 +89,9 @@ export default function TestPage() {
   // Initialize test
   useEffect(() => {
     const loadTest = () => {
-      const index = Math.floor(Math.random() * SAMPLES.length);
+      const index = Math.floor(Math.random() * samples.length);
       setSampleIndex(index);
-      setTimeout(() => setIsLoading(false), 1000); // Simulate loading
+      setTimeout(() => setIsLoading(false), 500);
     };
 
     loadTest();
@@ -143,7 +122,7 @@ export default function TestPage() {
     );
   }
 
-  const sample = SAMPLES[sampleIndex];
+  const sample = samples[sampleIndex];
   const originalWords = sample.original.split(" ");
   const totalErrors = Object.keys(sample.corrections).length;
   const correctedCount = Object.values(feedback).filter(Boolean).length;
@@ -152,11 +131,9 @@ export default function TestPage() {
 
   const handleWordClick = (index: number) => {
     if (!isTimerRunning || finished) return;
-    
-    setClickedWords((prev) => 
-      prev.includes(index) ? prev : [...prev, index]
-    );
-    
+
+    setClickedWords((prev) => (prev.includes(index) ? prev : [...prev, index]));
+
     if (sample.corrections[index]) {
       setEditingIndex(index);
     }
@@ -167,7 +144,7 @@ export default function TestPage() {
     const correction = sample.corrections[editingIndex];
     const expected = correction.correct.join(" ");
     const isCorrect = value.trim() === expected;
-    
+
     setCorrections((prev) => ({ ...prev, [editingIndex]: value }));
     setFeedback((prev) => ({ ...prev, [editingIndex]: isCorrect }));
   };
@@ -177,18 +154,20 @@ export default function TestPage() {
     setFinished(true);
 
     const correctedText = originalWords
-      .map((word, index) => feedback[index] ? corrections[index] : word)
+      .map((word, index) => (feedback[index] ? corrections[index] : word))
       .join(" ");
 
     const explanations = Object.entries(sample.corrections)
       .map(([indexStr, info]) => {
         const index = parseInt(indexStr);
-        return feedback[index] ? {
-          index,
-          wrong: originalWords[index],
-          correct: info.correct.join(" "),
-          explanation: info.explanation,
-        } : null;
+        return feedback[index]
+          ? {
+              index,
+              wrong: originalWords[index],
+              correct: info.correct.join(" "),
+              explanation: info.explanation,
+            }
+          : null;
       })
       .filter(Boolean);
 
@@ -201,7 +180,7 @@ export default function TestPage() {
       original: sample.original,
       corrected: correctedText,
       explanations,
-      difficulty: "Mudah"
+      difficulty: "Mudah",
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
@@ -222,15 +201,21 @@ export default function TestPage() {
         whileHover={!isEditing ? "hover" : {}}
         whileTap={!isEditing ? "tap" : {}}
         animate={
-          isCorrect ? "correct" : 
-          userCorrection && !isCorrect ? "incorrect" : 
-          "initial"
+          isCorrect
+            ? "correct"
+            : userCorrection && !isCorrect
+            ? "incorrect"
+            : "initial"
         }
         onClick={() => handleWordClick(index)}
         className={`relative cursor-pointer rounded-md transition
           ${isCorrect ? "text-emerald-800" : ""}
           ${userCorrection && !isCorrect ? "text-red-800" : ""}
-          ${!userCorrection && !isCorrect ? "hover:bg-blue-50 text-gray-800" : ""}
+          ${
+            !userCorrection && !isCorrect
+              ? "hover:bg-blue-50 text-gray-800"
+              : ""
+          }
         `}
       >
         {isEditing ? (
@@ -251,7 +236,10 @@ export default function TestPage() {
     );
   };
 
-  const renderCorrectionExplanation = ([idx, item]: [string, any], i: number) => {
+  const renderCorrectionExplanation = (
+    [idx, item]: [string, any],
+    i: number
+  ) => {
     const index = Number(idx);
     if (!feedback[index]) return null;
 
@@ -269,7 +257,9 @@ export default function TestPage() {
         <div className="flex-1 text-sm">
           <div className="space-y-2">
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-medium text-gray-500">Kata salah:</span>
+              <span className="text-sm font-medium text-gray-500">
+                Kata salah:
+              </span>
               <motion.span
                 className="text-sm font-medium bg-red-50 text-red-700 px-2 py-1 rounded"
                 initial={{ scale: 0.9 }}
@@ -279,7 +269,9 @@ export default function TestPage() {
                 {originalWords[index]}
               </motion.span>
               <ChevronRight className="h-4 w-4 text-gray-400" />
-              <span className="text-sm font-medium text-gray-500">Koreksi:</span>
+              <span className="text-sm font-medium text-gray-500">
+                Koreksi:
+              </span>
               <motion.span
                 className="text-sm font-medium bg-green-50 text-green-700 px-2 py-1 rounded"
                 initial={{ scale: 0.9 }}
@@ -290,7 +282,8 @@ export default function TestPage() {
               </motion.span>
             </div>
             <div className="text-sm text-gray-700">
-              <span className="font-medium text-gray-600">Penjelasan:</span> {item.explanation}
+              <span className="font-medium text-gray-600">Penjelasan:</span>{" "}
+              {item.explanation}
             </div>
           </div>
         </div>
@@ -383,7 +376,9 @@ export default function TestPage() {
                     </div>
 
                     <div className="space-y-4 mt-4">
-                      {Object.entries(sample.corrections).map(renderCorrectionExplanation)}
+                      {Object.entries(sample.corrections).map(
+                        renderCorrectionExplanation
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -412,7 +407,11 @@ export default function TestPage() {
                 <motion.div
                   className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center"
                   animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 60,
+                    ease: "linear",
+                  }}
                 >
                   <Clock className="h-6 w-6 text-blue-500" />
                 </motion.div>
@@ -570,4 +569,3 @@ export default function TestPage() {
     </div>
   );
 }
-
