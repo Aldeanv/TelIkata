@@ -16,271 +16,155 @@ export const sampleBank: Record<Difficulty, Sample[]> = {
   mudah: [
     {
       original:
-        "Kemarin saya berbelanja dipasar dan membeli sayur, buah dan ikan segar. Penjualnya ramah dan harga-harga disana lebih murah darlpada supermarket. Saya senang sekali belanja disitu.",
+        "Keluarga kami pergi ke danau minggu lalu untuk berpiknik. Kami membawa makanan ringan, tikar dan bola untuk bermain. Saat tiba disana, kami mencari tempat yang nyaman dekat air. Ayah menyiapkan peralatan sementara ibu menghamparkan tikar. adik saya langsung berlarian ke arah danau dengan semangat.",
+
       corrections: {
-        3: {
-          correct: ["di", "pasar"],
+        5: {
+          correct: ["Minggu"],
           explanation:
-            "'di pasar' harus dipisah karena 'di' adalah kata depan.",
+            "Kata 'minggu' dalam kalimat ini merujuk pada 'nama hari', yaitu 'hari Minggu', bukan satuan waktu. Menurut PUEBI, nama hari dan bulan harus diawali dengan huruf kapital. Oleh karena itu, penulisan yang benar adalah 'Minggu lalu', bukan 'minggu lalu'.",
         },
-        7: {
-          correct: ["buah,"],
-          explanation: "Gunakan koma sebelum 'dan' dalam daftar.",
-        },
-        15: {
+        20: {
           correct: ["di", "sana"],
-          explanation: "Penulisan kata depan 'di' harus dipisah: 'di sana'.",
-        },
-        18: {
-          correct: ["daripada"],
           explanation:
-            "Penulisan yang benar adalah 'daripada', bukan 'darlpada'.",
+            "Kata 'disana' salah karena menggabungkan kata depan 'di' dan kata keterangan tempat 'sana'. Menurut PUEBI, jika 'di' berfungsi sebagai kata depan (penunjuk tempat), maka harus ditulis terpisah dari kata yang mengikutinya. Penulisan yang benar adalah 'di sana'.",
         },
-        24: {
-          correct: ["di", "situ."],
-          explanation: "Penulisan yang benar adalah 'di situ', bukan 'disitu'.",
+        32: {
+          correct: ["Ibu"],
+          explanation:
+            "Kata 'Ibu' harus diawali huruf kapital karena berfungsi sebagai sapaan atau pengganti nama orang tua, bukan sebagai kata umum. Sesuai PUEBI, sapaan seperti 'Ibu', 'Ayah', dan 'Adik' ditulis dengan huruf besar jika merujuk pada orang tertentu.",
+        },
+        35: {
+          correct: ["Adik"],
+          explanation:
+            "Kata 'adik' berada di awal kalimat dan merujuk pada 'anggota keluarga tertentu' yang sedang dibicarakan. Pertama, menurut PUEBI, **setiap kalimat harus dimulai dengan huruf kapital**. Kedua, karena 'Adik' juga digunakan sebagai sapaan atau pengganti nama, maka penulisannya memang harus diawali dengan huruf kapital. Penulisan yang tepat adalah: 'Adik saya langsung berlarian...'",
         },
       },
     },
-    // Tambahkan soal mudah lainnya...
+    {
+      original:
+        "pagi ini sekolah kami mengadakan upacara bendera untuk memperingati hari kemerdekaan. Semua siswa berkumpul dilapangan dengan memakai seragam lengkap. Kepala sekolah memberikan pidato tentang pentingnya cintah tanah air. Setelah itu, para siswa di arahkan untuk mengikuti lomba-lomba yang telah disiapkan panitia",
+
+      corrections: {
+        0: {
+          correct: ["Pagi"],
+          explanation:
+            "Kalimat awal harus dimulai dengan huruf kapital. 'pagi ini...' seharusnya ditulis 'Pagi ini...'. Menurut PUEBI, huruf kapital digunakan sebagai huruf pertama kalimat.",
+        },
+        14: {
+          correct: ["di", "lapangan"],
+          explanation:
+            "'Dilapangan' salah karena menggabungkan kata depan 'di' dan kata benda 'lapangan'. Kata depan 'di' harus **dipisahkan** dari kata yang mengikutinya jika menunjukkan tempat, sesuai PUEBI.",
+        },
+        25: {
+          correct: ["cinta"],
+          explanation:
+            "Penulisan 'cintah' salah eja. Bentuk baku menurut KBBI adalah 'cinta', tanpa huruf 'h' di akhir.",
+        },
+        32: {
+          correct: ["diarahkan"],
+          explanation:
+            "Penulisan 'di arahkan' salah karena **kata kerja pasif** yang menggunakan awalan 'di-' harus ditulis **serangkai** jika bukan kata depan. Karena 'diarahkan' adalah bentuk verba pasif, penulisan yang benar adalah satu kata.",
+        },
+        33: {
+          correct: [""],
+          explanation:
+            "Penulisan 'di arahkan' salah karena **kata kerja pasif** yang menggunakan awalan 'di-' harus ditulis **serangkai** jika bukan kata depan. Karena 'diarahkan' adalah bentuk verba pasif, penulisan yang benar adalah satu kata.",
+        },
+        40: {
+          correct: ["panitia."],
+          explanation:
+            "Kalimat terakhir tidak diakhiri tanda baca. Semua kalimat **harus diakhiri tanda titik (.)**, tanda tanya (?), atau tanda seru (!) sesuai konteks. Tambahkan titik setelah 'panitia'.",
+        },
+      },
+    },
+    {
+      original:
+        "pada saat liburan sekolah kemarin, kami pergi kerumah nenek dikampung. kami sangat senang karena bisa bermain dan membatu nenek memasak. selain itu, kami juga belajar mengenal tumbuhan dan hewan di sekitar rumahnya. Sepulang dari sana, kami merasa lelah, tetapi bahagia.",
+
+      corrections: {
+        0: {
+          correct: ["Pada"],
+          explanation:
+            "Awal kalimat harus menggunakan huruf kapital, sesuai dengan kaidah PUEBI: 'Huruf kapital dipakai sebagai huruf pertama kata pada awal kalimat.' Oleh karena itu, 'pada saat liburan...' harus ditulis sebagai 'Pada saat liburan...'",
+        },
+        7: {
+          correct: ["ke", "rumah"],
+          explanation:
+            "Gabungan kata 'kerumah' salah karena 'ke' di sini adalah kata depan yang menunjukkan arah atau tempat. Menurut PUEBI, kata depan seperti 'ke', 'di', 'dari' harus ditulis terpisah dari kata benda yang mengikutinya. Jadi, penulisan yang benar adalah 'ke rumah'.",
+        },
+        9: {
+          correct: ["di", "kampung"],
+          explanation:
+            "Sama seperti 'ke rumah', kata 'dikampung' salah penulisan karena 'di' adalah kata depan lokasi. Kata depan harus dipisah dari kata yang mengikutinya. Maka bentuk bakunya adalah 'di kampung'.",
+        },
+        10: {
+          correct: ["Kami"],
+          explanation:
+            "Kata 'kami' muncul setelah titik dan mengawali kalimat baru, sehingga harus diawali dengan huruf kapital. Ini mengikuti aturan PUEBI",
+        },
+        17: {
+          correct: ["membantu"],
+          explanation:
+            "'membatu' adalah bentuk yang salah eja dari 'membantu'. Menurut KBBI, 'membatu' berarti menjadi keras seperti batu, sedangkan maksud kalimat ini adalah menolong nenek memasak. Maka, kata yang benar adalah 'membantu'.",
+        },
+      },
+    },
   ],
+
+  //// Level menengah ////
+
   menengah: [
     {
       original:
-        "Kemarin saya mengikuti seminar tentang pengunaan teknologi dalam pendidikan. Acaranya diadakan dikampus dan dihadiri oleh guru-guru dari berbagai sekolahan. Saya merasa sangat terinspirasi oleh pembicara yang menyampaikan materi dengan jelas dan menarik. Disela-sela sesi, kami diberi kesempatan untuk berdiskusi dan bertukar pikiran. Selain itu, kami juga mendapatkan snack dan minuman ringan. Dilingkungan acara, panitia menyediakan tempat sampah dan papan pengumuman yang membantu peserta. Meski acaranya sederhana, namun manfaatnya sangat berharga bagi perkembangan saya.",
+        "Dalam rangka memperingati hari bumi, sekolah kami mengadakan kegiatan bersih-bersih lingkungan dan menanam pohon. seluruh siswa diminta membawakantumbuhan yang akan ditanam disekitar halaman sekolah. sebagian dari mereka membelikan bibit di toko tanaman, sementara yang lain membawanya dari rumah masing-masing. kegiatan ini bertujuan untuk menumbuhkan kepedulian terhadap lingkungan sejak dini. guru-guru juga menyiapkan materi edukasi tentang dampak kerusakan alam dan cara-cara mencegahnya.",
       corrections: {
-        5: {
-          correct: ["penggunaan"],
+        "4": {
+          correct: ["Bumi,"],
           explanation:
-            "Ejaan yang benar adalah 'penggunaan', bukan 'pengunaan'.",
+            "Istilah 'Hari Bumi' adalah nama peringatan resmi, sehingga menurut PUEBI Bab II Pasal 1.c, setiap unsur nama peristiwa resmi ditulis dengan huruf kapital.",
         },
-        11: {
-          // Changed from 10 to 11
-          correct: ["di", "kampus"],
+        "14": {
+          correct: ["Seluruh"],
           explanation:
-            "'di kampus' harus dipisah karena 'di' adalah kata depan.",
+            "'Seluruh' berada di awal kalimat setelah titik, sehingga harus diawali huruf kapital.",
         },
-        18: {
-          // Changed from 14 to 18
-          correct: ["sekolah."],
+        "17": {
+          correct: ["membawakan", "tumbuhan"],
           explanation:
-            "'Sekolahan' adalah bentuk tidak baku. Gunakan 'sekolah'.",
+            "'membawakantumbuhan' tidak memiliki spasi. Harus ditulis sebagai dua kata yang tepat: 'membawakan tumbuhan'. Ini termasuk kesalahan spasi dan ejaan.",
         },
-        32: {
-          // Changed from 19 to 32
-          correct: ["Di", "sela-sela"],
+        "21": {
+          correct: ["di", "sekitar"],
           explanation:
-            "'Di sela-sela' harus dipisah karena 'Di' adalah kata depan.",
+            "'disekitar' salah karena 'di' sebagai kata depan harus dipisah dari kata benda yang mengikutinya. Penulisan benar: 'di sekitar'.",
         },
-        47: {
-          // Changed from 25 to 47
-          correct: ["snack,"],
-          explanation: "Gunakan koma untuk memisahkan dalam daftar.",
-        },
-        51: {
-          // Changed from 28 to 51
-          correct: ["Di", "lingkungan"],
-          explanation: "Penulisan 'Di lingkungan' harus dipisah.",
-        },
-        59: {
-          // Changed from 33 to 59
-          correct: ["pengumuman,"],
-          explanation: "Tambahkan koma sebelum konjungsi 'dan'.",
-        },
-        63: {
-          // Changed from 38 to 63
-          correct: ["Meskipun"],
+        "24": {
+          correct: ["Sebagian"],
           explanation:
-            "Gunakan 'Meskipun', bukan 'meski' dalam kalimat baku formal.",
+            "'Sebagian' berada di awal kalimat baru setelah titik, maka harus ditulis dengan huruf kapital.",
         },
-        71: {
-          // Changed from 42 to 71
-          correct: ["perkembangan", "diri"],
-          explanation: "Tambahkan 'diri' agar makna lebih tepat.",
+        "27": {
+          correct: ["membeli"],
+          explanation:
+            "'membelikan' kurang tepat secara makna karena kata tersebut biasanya berarti 'membeli untuk orang lain'. Dalam konteks ini, siswa membeli untuk diri sendiri. Maka kata yang tepat adalah 'membeli'.",
+        },
+        "49": {
+          correct: ["Guru-guru"],
+          explanation:
+            "'guru-guru' berada di awal kalimat setelah titik. Maka harus ditulis 'Guru-guru' dengan huruf kapital.",
+        },
+        "53": {
+          correct: ["edukatif"],
+          explanation:
+            "'materi edukasi' sebenarnya tidak baku dalam Bahasa Indonesia. Kata yang tepat dan sesuai KBBI adalah 'materi edukatif' untuk menjelaskan materi bersifat pendidikan.",
         },
       },
     },
   ],
-  sulit: [
-    {
-      original:
-        "Banyak siswa yang belum menyadari pentingnya keterampilan komunikasi lisan maupun tulisan. Hal ini terjadi karena mereka lebih fokus pada pelajaran yang bersifat teoritis dan menganggap komunikasi sebagai hal yang sepele. Dikelas, sebagian besar siswa jarang bertanya atau menyampaikan pendapatnya. Padahal, kemampuan berbicara di depan umum merupakan keterampilan yang sangat dibutuhkan dilingkungan akademik maupun dunia kerja. Sebuah penelitian menunjukan bahwa siswa yang aktif berdiskusi cenderung lebih percaya diri. Sayangnya, metode pengajaran disekolah belum menekankan pada aspek komunikasi secara menyeluruh. Para guru lebih menekankan hafalan dibandingkan pelatihan berbicara. Selain itu, kurangnya kesempatan untuk tampil di depan teman-teman juga menjadi kendala. Oleh karna itu, penting bagi pihak sekolah untuk menyediakan program pelatihan yang dapat melatih keberanian dan kejelasan berbicara siswa.",
-      corrections: {
-        30: {
-          correct: ["Di", "kelas,"],
-          explanation:
-            "'Di kelas' harus dipisah karena 'Di' adalah kata depan.",
-        },
-        50: {
-          correct: ["di", "lingkungan"],
-          explanation: "'di lingkungan' harus dipisah.",
-        },
-        57: {
-          correct: ["menunjukkan"],
-          explanation: "Ejaan yang benar adalah 'menunjukkan'.",
-        },
-        62: {
-          correct: ["berdiskusi,"],
-          explanation: "Tambahkan koma sebelum kata sambung.",
-        },
-        70: {
-          correct: ["di", "sekolah"],
-          explanation: "Penulisan yang benar adalah 'di sekolah'.",
-        },
-        72: {
-          correct: ["penekanan"],
-          explanation: "Gunakan kata benda 'penekanan', bukan bentuk kerja.",
-        },
-        83: {
-          correct: ["dibanding"],
-          explanation: "Gunakan bentuk baku 'dibandingkan'.",
-        },
-        99: {
-          correct: ["karena"],
-          explanation: "Penulisan yang benar adalah 'karena', bukan 'karna'.",
-        },
-        115: {
-          correct: ["berbicara."],
-          explanation: "Perlu tanda titik untuk mengakhiri kalimat.",
-        },
-      },
-    },
-  ],
-  challenge: [
-    {
-      original:
-        "Hari ini saya pergi kekantor untuk menyelesaikan pekerjaan. Saya bertemu temen lama dan kita makan siang bersama. Disana saya memesan nasi goreng dan es teh manis. Harganya tidak terlalu mahal tetapi rasanya enak sekali. Saya juga membeli oleh-oleh untuk keluarga dirumah. Setelah itu saya pulang kerumah dengan perasaan senang.",
-      corrections: {
-        3: {
-          correct: ["ke", "kantor"],
-          explanation:
-            "'ke kantor' harus dipisah karena 'ke' adalah kata depan.",
-        },
-        6: {
-          correct: ["teman"],
-          explanation: "Penulisan yang benar adalah 'teman', bukan 'temen'.",
-        },
-        10: {
-          correct: ["Di", "sana"],
-          explanation:
-            "'Di sana' harus dipisah dan diawali huruf kapital karena di awal kalimat.",
-        },
-        16: {
-          correct: ["tetapi,"],
-          explanation:
-            "Gunakan koma sebelum konjungsi 'tetapi' jika diikuti klausa lengkap.",
-        },
-        22: {
-          correct: ["di", "rumah"],
-          explanation:
-            "'di rumah' harus dipisah karena 'di' adalah kata depan.",
-        },
-        25: {
-          correct: ["ke", "rumah"],
-          explanation:
-            "'ke rumah' harus dipisah karena 'ke' adalah kata depan.",
-        },
-        28: {
-          correct: ["perasaan"],
-          explanation:
-            "Penulisan yang benar adalah 'perasaan', bukan 'perasaan'.",
-        },
-      },
-    },
-    {
-      original:
-        "Pada hari minggu yang cerah, saya dan keluarga memutuskan untuk pergi liburan ke Bali. Kami berangkat dari Jakarta pagi-pagi sekali menggunakan pesawat. Disbandara, kami bertemu dengan seorang turis asing yang tersesat dan membantunya menemukan gate keberangkatan. Setelah sampai di Bali, kami langsung menuju penginapan yang sudah dipesan sebelumnya. Penginapannya sangat nyaman dan memiliki kolam renang yang besar. Keesokan harinya, kami mengunjungi pantai Kuta. Disana, kami bermain air, berjemur, dan mencoba berbagai kuliner khas Bali seperti babi guling dan sate lilit. Saya juga membeli oleh-oleh seperti kaos dan kerajinan tangan untuk temen-temen dikantor. Pada hari ketiga, kami menyewa motor untuk menjelajahi tempat wisata lain seperti Ubud dan Tanah Lot. Pemandangan disana sangat indah dan saya mengambil banyak foto. Sayangnya, cuaca tidak selalu mendukung sehingga kami harus membawa payung kemana-mana. Meskipun begitu, liburan kali ini sangat berkesan dan saya berharap bisa kembali lagi diwaktu yang akan datang. Sebelum pulang, kami sempat mampir kedapur sebuah warung untuk mencoba kopi luwak yang terkenal. Rasanya unik dan aromanya sangat harum. Sesampainya dirumah, saya langsung membagikan oleh-oleh kepada tetangga dan keluarga.",
-      corrections: {
-        2: {
-          correct: ["Minggu"],
-          explanation: "Nama hari harus diawali huruf kapital: 'Minggu'.",
-        },
-        10: {
-          correct: ["di", "bandara"],
-          explanation:
-            "'di bandara' harus dipisah karena 'di' adalah kata depan.",
-        },
-        15: {
-          correct: ["gate"],
-          explanation:
-            "Kata serapan yang benar adalah 'gerbang' (atau 'gate' jika istilah bandara).",
-        },
-        22: {
-          correct: ["Di", "sana"],
-          explanation:
-            "'Di sana' harus dipisah dan diawali huruf kapital jika di awal kalimat.",
-        },
-        28: {
-          correct: ["teman-teman"],
-          explanation:
-            "Penulisan yang benar adalah 'teman-teman', bukan 'temen-temen'.",
-        },
-        29: {
-          correct: ["di", "kantor"],
-          explanation:
-            "'di kantor' harus dipisah karena 'di' adalah kata depan.",
-        },
-        36: {
-          correct: ["di", "sana"],
-          explanation: "'di sana' harus dipisah.",
-        },
-        42: {
-          correct: ["ke", "mana-mana"],
-          explanation:
-            "'ke mana-mana' harus dipisah karena 'ke' adalah kata depan.",
-        },
-        50: {
-          correct: ["di", "waktu"],
-          explanation:
-            "'di waktu' harus dipisah karena 'di' adalah kata depan.",
-        },
-        54: {
-          correct: ["ke", "dapur"],
-          explanation:
-            "'ke dapur' harus dipisah karena 'ke' adalah kata depan.",
-        },
-        63: {
-          correct: ["di", "rumah"],
-          explanation: "'di rumah' harus dipisah.",
-        },
-        65: {
-          correct: ["oleh-oleh"],
-          explanation:
-            "Penulisan yang benar adalah 'oleh-oleh' (dengan tanda hubung).",
-        },
-        5: {
-          correct: ["liburan"],
-          explanation:
-            "Kata 'liburan' sebaiknya diganti 'berlibur' untuk struktur kalimat lebih baik.",
-        },
-        13: {
-          correct: ["penginapan"],
-          explanation:
-            "Lebih formal jika menggunakan 'hotel' atau 'akomodasi'.",
-        },
-        19: {
-          correct: ["kuliner"],
-          explanation:
-            "Kata 'makanan' lebih umum digunakan daripada 'kuliner' dalam konteks ini.",
-        },
-        33: {
-          correct: ["motor"],
-          explanation: "Lebih tepat 'sepeda motor' untuk kejelasan.",
-        },
-        45: {
-          correct: ["berkesan"],
-          explanation: "Bisa diganti 'tak terlupakan' untuk variasi diksi.",
-        },
-        56: {
-          correct: ["warung"],
-          explanation:
-            "Kata 'warung' kurang formal, bisa diganti 'restoran kecil'.",
-        },
-        60: {
-          correct: ["harum"],
-          explanation: "Kata 'wangi' lebih umum digunakan untuk kopi.",
-        },
-      },
-    },
-  ],
+
+  //// Level suli ////
+
+  sulit: [],
+  challenge: [],
 };

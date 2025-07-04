@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Explanation, ResultData } from "@/types/types";
 import {
-  Share2,
   RotateCw,
   AlertCircle,
   Check,
@@ -197,19 +196,10 @@ export default function ResultPage() {
                 localStorage.removeItem("siteliti_result");
                 window.location.href = "/";
               }}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition flex items-center justify-center gap-2 text-sm"
+              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition flex items-center justify-center gap-2 text-sm cursor-pointer"
             >
               <RotateCw className="h-4 w-4" />
               Coba Lagi
-            </button>
-            <button
-              onClick={() => {
-                // TODO: Implement share logic
-              }}
-              className="px-5 py-2.5 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition flex items-center justify-center gap-2 text-sm"
-            >
-              <Share2 className="h-4 w-4" />
-              Bagikan
             </button>
           </div>
         </motion.div>
@@ -229,7 +219,7 @@ const StatCard = ({
   icon: React.ReactNode;
   value: string;
   label: string;
-  color: "blue" | "emerald" | "violet" | "amber"; // <--- Tambahkan ini
+  color: "blue" | "emerald" | "violet" | "amber"; 
 }) => {
   const colorMap = {
     blue: { bg: "bg-blue-50", text: "text-blue-600" },
