@@ -136,7 +136,7 @@ export default function ResultPage() {
             <StatCard
               icon={<Eye className="h-5 w-5" />}
               value={`${untouched}%`}
-              label="Kata Tak Disentuh"
+              label="Akurasi Ketepatan"
               color="violet"
             />
             <StatCard
