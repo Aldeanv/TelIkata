@@ -161,10 +161,176 @@ export const sampleBank: Record<Difficulty, Sample[]> = {
         },
       },
     },
+    {
+      original:
+        "Pada hari sabtu lalu, kami mengikuti kegiatan kemah pramuka disebuah lapangan yang luas. disana, kami belajar mendirikan tenda, memasak diluar ruangan, dan bekerjasama dalam tim. kegiatan ini sangat menyenangkan meskipun cuaca cukup panas. saat malam tiba, kami berkumpul disekitar api unggun untuk mendengarkan cerita dari Kakak Pembina. beberapa teman saya bahkan menampilkan pertunjukan seni yang lucu dan kreatif. pengalaman ini membuat saya merasa lebih mandiri dan bertanggung jawab.",
+      corrections: {
+        "2": {
+          correct: ["Sabtu"],
+          explanation:
+            "'sabtu' adalah nama hari, sehingga harus diawali huruf kapital. Sesuai PUEBI, nama hari selalu ditulis dengan huruf kapital.",
+        },
+        "9": {
+          correct: ["di", "sebuah"],
+          explanation:
+            "'disebuah' salah karena 'di' sebagai kata depan harus dipisah dari kata yang mengikutinya. Penulisan yang benar adalah 'di sebuah'.",
+        },
+        "13": {
+          correct: ["Di", "sana"],
+          explanation:
+            "'disana' salah karena terdiri dari kata depan 'di' + kata keterangan 'sana'. Selain itu, frasa ini berada di awal kalimat, jadi 'di' harus dipisah dan 'sana' diawali huruf kapital: 'Di sana'.",
+        },
+        "19": {
+          correct: ["di", "luar"],
+          explanation:
+            "'diluar' salah penulisan. Kata depan 'di' harus dipisah dari kata tempat 'luar'. Penulisan baku: 'di luar'.",
+        },
+        "22": {
+          correct: ["bekerja", "sama"],
+          explanation:
+            "'bekerjasama' salah karena dalam konteks ini, 'bekerja' adalah verba dan 'sama' adalah pelengkap. Maka harus ditulis terpisah: 'bekerja sama'.",
+        },
+        "25": {
+          correct: ["Kegiatan"],
+          explanation:
+            "'kegiatan' berada di awal kalimat baru setelah titik. Maka harus diawali huruf kapital: 'Kegiatan'.",
+        },
+        "33": {
+          correct: ["Saat"],
+          explanation:
+            "'saat' mengawali kalimat baru setelah titik. Maka harus diawali huruf kapital.",
+        },
+        "38": {
+          correct: ["di", "sekitar"],
+          explanation:
+            "'disekitar' salah. 'di' sebagai kata depan harus dipisah dari kata 'sekitar'. Penulisan yang benar: 'di sekitar'.",
+        },
+        "47": {
+          correct: ["Beberapa"],
+          explanation:
+            "'beberapa' berada di awal kalimat, harus ditulis dengan huruf kapital.",
+        },
+      },
+    },
   ],
 
   //// Level suli ////
 
-  sulit: [],
-  challenge: [],
+  sulit: [
+    {
+      original:
+        "banyak pelajar sekarang lebih memilih mencari informasi dari internet dibandingkan membaca buku. hal ini tidak sepenuhnya salah, namun sering kali membuat mereka menjadi malas untuk memahami materi secara mendalam. mereka terkadang hanya menghapal tanpa benar-benar mengerti isi pelajarannya. selain itu, kebiasaan copy paste dari berbagai situs juga menyebabkan turunnya kemampuan berpikir kritis. dilingkungan sekolah, guru harus memberikan pengarahan tentang pentingnya memahami sumber informasi dengan benar. jika tidak ditangani, kebiasaan ini bisa berdampak panjang terhadap kualitas pendidikan. terlebih lagi, minimnya literasi digital juga memperparah keadaan. siswa perlu di bekali dengan keterampilan untuk menilai apakah sebuah informasi layak dipercaya atau tidak. oleh sebab itu, sinergi antara sekolah, orangtua dan pemerintah menjadi hal yang sangat dibutuhkan.",
+      corrections: {
+        "0": {
+          correct: ["Banyak"],
+          explanation:
+            "Kalimat harus diawali dengan huruf kapital. PUEBI mewajibkan huruf kapital di awal kalimat.",
+        },
+        "12": {
+          correct: ["Hal"],
+          explanation:
+            "Awal kalimat baru setelah titik harus menggunakan huruf kapital: 'Hal ini...'.",
+        },
+        "32": {
+          correct: ["menghafal"],
+          explanation:
+            "Ejaan baku menurut KBBI adalah 'menghafal', bukan 'menghapal'.",
+        },
+        "52": {
+          correct: ["Di", "lingkungan"],
+          explanation:
+            "Gabungan 'dilingkungan' salah karena 'di' adalah kata depan. Harus dipisah: 'di lingkungan'.",
+        },
+        "86": {
+          correct: ["dibekali"],
+          explanation:
+            "Kata kerja pasif 'dibekali' harus ditulis serangkai, bukan 'di bekali'.",
+        },
+        "87": {
+          correct: [""],
+          explanation:
+            "Kata kerja pasif 'dibekali' harus ditulis serangkai, bukan 'di bekali'.",
+        },
+        "105": {
+          correct: ["orang", "tua"],
+          explanation:
+            "'Orangtua' ditulis terpisah jika merujuk pada ayah dan ibu sebagai satuan.",
+        },
+      },
+    },
+  ],
+  challenge: [
+    {
+      original:
+        "pagi itu udara terasa sejuk dan langit sedikit mendung. warga mulai berdatangan ke lapangan utama untuk mengikuti kegiatan festival budaya tahunan. acara ini merupakan bentuk pelestarian tradisi lokal yang telah dilakukan turun menurun. berbagai stand disiapkan sejak malam sebelumnya oleh panitia yang bekerjasama dengan karang taruna. tenda-tenda dihiasi kain batik dan anyaman bambu, menciptakan suasana yang kental akan nuansa etnik. anak-anak terlihat antusias mengenakan pakaian adat dan membawa bendera kecil sambil bernyanyi lagu daerah. beberapa pengunjung asing pun tampak tertarik dan mengabadikan momen tersebut menggunakan kamera. selain pertunjukan seni, tersedia juga berbagai lomba rakyat seperti balap karung, tarik tambang, dan panjat pinang. sebelum acara dimulai, ketua panitia menyampaikan sambutan sambil menekankan pentingnya menjaga warisan budaya leluhur. suasana semakin meriah ketika tarian tradisional dimulai. para penari bergerak dengan luwes mengikuti irama gamelan yang mengalun dari pengeras suara. disekeliling panggung, penonton bersorak sambil bertepuk tangan. disela keramaian, beberapa relawan membagikan brosur tentang sejarah daerah dan asal-usul festival ini. stand makanan juga dipenuhi pengunjung yang ingin mencicipi hidangan khas seperti serabi, sate lilit, dan es dawet. aroma rempah menggoda dari dapur terbuka yang ada dibagian timur lapangan. ibu-ibu tampak sibuk mengaduk adonan dan menggoreng pisang menggunakan kuali besar. menjelang siang, cuaca mulai panas namun tidak menyurutkan semangat peserta. lomba panjat pinang menjadi acara yang paling dinantikan, dan sorak sorai pecah saat peserta berhasil meraih hadiah diatas batang yang licin. sorotan kamera televisi lokal ikut merekam kegembiraan yang terpancar diwajah setiap peserta. dipenghujung acara, panitia membagikan sertifikat dan hadiah kepada pemenang lomba. semua orang terlihat puas meskipun pakaian mereka basah oleh keringat. suara gamelan pelan-pelan meredup, menandai akhir kegiatan yang penuh kebersamaan dan tawa. beberapa pengunjung masih asyik mengambil foto atau bercengkrama dibawah pohon rindang. festival ini bukan sekadar hiburan, melainkan cara masyarakat mengenal dan mencintai warisan budayanya sendiri. harapannya, acara seperti ini terus dilakukan secara berkelanjutan agar generasi muda tidak melupakan akar identitas mereka.",
+      corrections: {
+        "0": {
+          correct: ["Pagi"],
+          explanation: "Huruf kapital digunakan di awal kalimat.",
+        },
+        "9": {
+          correct: ["Warga"],
+          explanation: "Setelah titik, kata harus diawali huruf kapital.",
+        },
+        "31": {
+          correct: ["turun-temurun."],
+          explanation:
+            "'Turun menurun' bukanlah kata yang baku dan kata 'turun temurun' seharusnya ditulis dengan tanda hubung karena merupakan bentuk kata ulang.",
+        },
+        "32": {
+          correct: [""],
+          explanation:
+            "'Turun menurun' bukanlah kata yang baku dan kata 'turun temurun' seharusnya ditulis dengan tanda hubung karena merupakan bentuk kata ulang.",
+        },
+        "42": {
+          correct: ["bekerja", "sama"],
+          explanation:
+            "'bekerjasama' harus dipisah karena 'bekerja' dan 'sama' bukan imbuhan satu kesatuan.",
+        },
+        "136": {
+          correct: ["Di", "sekeliling"],
+          explanation:
+            "'disekeliling' bisa diganti 'di sekeliling' karena 'di' adalah kata depan yang wajib dipisah.",
+        },
+        "143": {
+          correct: ["di", "sela"],
+          explanation: "'disela' salah penulisan, harus dipisah: 'di sela'.",
+        },
+        "181": {
+          correct: ["di", "bagian"],
+          explanation:
+            "'dibagian' salah karena 'di' sebagai kata depan harus dipisah.",
+        },
+        "184": {
+          correct: ["Ibu-ibu"],
+          explanation:
+            "Sapaan di awal kalimat harus menggunakan huruf kapital.",
+        },
+        "222": {
+          correct: ["di", "atas"],
+          explanation:
+            "Penulisan 'diatas' salah karena 'di' sebagai kata depan tidak boleh digabung.",
+        },
+        "235": {
+          correct: ["di", "wajah"],
+          explanation:
+            "'diwajah' adalah kesalahan umum, harus dipisah sesuai kaidah PUEBI.",
+        },
+        "238": {
+          correct: ["Di", "penghujung"],
+          explanation:
+            "'dipenghujung' perlu diubah jadi 'di penghujung' dan diawali huruf kapital karena awal kalimat.",
+        },
+        "278": {
+          correct: ["di", "bawah"],
+          explanation:
+            "'dibawah' salah, karena 'di' adalah kata depan yang tidak boleh digabung.",
+        },
+        "295": {
+          correct: ["Harapannya"],
+          explanation: "'harapannya' di awal kalimat harus diawali kapital.",
+        },
+      },
+    },
+  ],
 };
