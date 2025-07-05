@@ -184,7 +184,7 @@ export default function TestPage() {
       original: sample.original,
       corrected: correctedText,
       explanations,
-      difficulty: "Mudah",
+      difficulty: level,
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
