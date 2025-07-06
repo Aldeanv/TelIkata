@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
 import {
   FileText,
-  Loader2,
   ChevronUp,
   ChevronDown,
   ArrowLeft,
@@ -81,6 +80,7 @@ export default function TestPage() {
     : "mudah";
 
   const [samples, setSamples] = useState<NormalizedSample[]>([]);
+  const [noSample, setNoSample] = useState(false);
   const [sampleIndex, setSampleIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [timer, setTimer] = useState(0);
@@ -101,6 +101,11 @@ export default function TestPage() {
         const res = await fetch(`/api/samples?level=${level}`);
         const data: Sample[] = await res.json();
 
+        if (!data || data.length === 0) {
+          setNoSample(true);
+          return;
+        }
+
         const normalized: NormalizedSample[] = data.map((sample) => {
           const correctionMap: Record<string, Correction> = {};
           for (const c of sample.corrections) {
@@ -110,12 +115,11 @@ export default function TestPage() {
         });
 
         setSamples(normalized);
-        if (normalized.length > 0) {
-          const randomIndex = Math.floor(Math.random() * normalized.length);
-          setSampleIndex(randomIndex);
-        }
+        const randomIndex = Math.floor(Math.random() * normalized.length);
+        setSampleIndex(randomIndex);
       } catch (err) {
         console.error("Failed to fetch samples:", err);
+        setNoSample(true);
       } finally {
         setIsLoading(false);
       }
@@ -130,21 +134,105 @@ export default function TestPage() {
     return () => clearInterval(interval);
   }, [isTimerRunning]);
 
-  if (isLoading || sampleIndex === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-indigo-50">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center"
+  if (noSample) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", damping: 10, stiffness: 100 }}
+        className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 max-w-md w-full"
+      >
+        <motion.div 
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: "mirror" }}
+          className="flex justify-center mb-6"
         >
-          <Loader2 className="h-12 w-12 text-blue-600 animate-spin mb-4" />
-          <p className="text-lg text-gray-600">Mempersiapkan tes...</p>
+          <div className="p-3 bg-blue-50 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
         </motion.div>
-      </div>
-    );
-  }
+        
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-3">
+          Soal Belum Tersedia
+        </h2>
+        
+        <p className="text-gray-500 text-center mb-6 leading-relaxed">
+          Belum ada soal untuk tingkat <span className="font-medium text-blue-500">{level}</span>.
+          Coba tingkat kesulitan lain atau periksa kembali nanti.
+        </p>
+        
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/")}
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200"
+        >
+          Kembali ke Beranda
+        </motion.button>
+      </motion.div>
+    </div>
+  );
+}
+
+if (isLoading || sampleIndex === null) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center space-y-4"
+      >
+        <motion.div
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.05, 1]
+          }}
+          transition={{ 
+            rotate: { 
+              duration: 1.8, 
+              repeat: Infinity, 
+              ease: "linear" 
+            },
+            scale: {
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "easeInOut"
+            }
+          }}
+          className="relative"
+        >
+          <div className="w-12 h-12 border-3 border-blue-400 border-t-transparent rounded-full"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+          </div>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-center space-y-1"
+        >
+          <h3 className="text-lg font-medium text-gray-700">Menyiapkan Tes</h3>
+          <p className="text-sm text-gray-400">Harap tunggu sebentar...</p>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: 120 }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="h-0.5 bg-gray-200 rounded-full overflow-hidden"
+        >
+          <div className="h-full bg-blue-400 w-1/3"></div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
 
   const sample = samples[sampleIndex];
   const originalWords = sample.original.split(" ");
