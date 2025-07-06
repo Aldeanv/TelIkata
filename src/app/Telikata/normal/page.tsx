@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence, easeOut  } from "framer-motion";
+import { motion, AnimatePresence, easeOut } from "framer-motion";
 import {
   FileText,
   Loader2,
@@ -12,7 +12,11 @@ import {
   Clock,
   ChevronRight,
 } from "lucide-react";
-import { sampleBank, Difficulty, Correction } from "@/data/test";
+import { Sample, Difficulty, Correction } from "@/data/test";
+
+type NormalizedSample = Omit<Sample, "corrections"> & {
+  corrections: Record<string, Correction>;
+};
 
 // Helper functions
 const formatTime = (seconds: number) => {
@@ -70,7 +74,15 @@ const hintVariants = {
 
 export default function TestPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const rawLevel = searchParams.get("level") as Difficulty | null;
+  const isValidLevel = (value: string | null): value is Difficulty =>
+    ["mudah", "menengah", "sulit"].includes(value ?? "");
+
+  const level: Difficulty = isValidLevel(rawLevel) ? rawLevel : "mudah";
+
   const [isLoading, setIsLoading] = useState(true);
+  const [samples, setSamples] = useState<NormalizedSample[]>([]);
   const [sampleIndex, setSampleIndex] = useState<number | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [corrections, setCorrections] = useState<{ [index: number]: string }>(
@@ -82,24 +94,40 @@ export default function TestPage() {
   const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [finished, setFinished] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const searchParams = useSearchParams();
-  const rawLevel = searchParams.get("level") as Difficulty | null;
-  const isValidLevel = (value: string | null): value is Difficulty =>
-    ["mudah", "menengah", "sulit"].includes(value ?? "");
 
-  const level: Difficulty = isValidLevel(rawLevel) ? rawLevel : "mudah";
-  const samples = sampleBank[level];
-
-  // Initialize test
   useEffect(() => {
-    const loadTest = () => {
-      const index = Math.floor(Math.random() * samples.length);
-      setSampleIndex(index);
-      setTimeout(() => setIsLoading(false), 500);
+    const fetchSamples = async () => {
+      try {
+        const res = await fetch(`/api/samples?level=${level}`);
+        const data: Sample[] = await res.json();
+
+        const normalized: NormalizedSample[] = data.map((sample) => {
+          const correctionMap: Record<string, Correction> = {};
+          for (const c of sample.corrections) {
+            correctionMap[c.wordIndex.toString()] = c;
+          }
+
+          return {
+            ...sample,
+            corrections: correctionMap,
+          };
+        });
+
+        setSamples(normalized);
+
+        if (normalized.length > 0) {
+          const randomIndex = Math.floor(Math.random() * normalized.length);
+          setSampleIndex(randomIndex);
+        }
+      } catch (err) {
+        console.error("Failed to fetch samples:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    loadTest();
-  }, [samples.length]);
+    fetchSamples();
+  }, [level]);
 
   // Timer effect
   useEffect(() => {
@@ -137,9 +165,10 @@ export default function TestPage() {
     if (!isTimerRunning || finished) return;
 
     setClickedWords((prev) => (prev.includes(index) ? prev : [...prev, index]));
-
     if (sample.corrections[index]) {
       setEditingIndex(index);
+    } else {
+      setEditingIndex(null);
     }
   };
 
@@ -196,6 +225,7 @@ export default function TestPage() {
     const isEditing = editingIndex === index;
     const userCorrection = corrections[index];
     const isCorrect = feedback[index];
+    const isWrongWord = index in sample.corrections;
 
     return (
       <motion.span
@@ -213,16 +243,12 @@ export default function TestPage() {
         }
         onClick={() => handleWordClick(index)}
         className={`relative cursor-pointer rounded-md transition
-          ${isCorrect ? "text-emerald-800" : ""}
-          ${userCorrection && !isCorrect ? "text-red-800" : ""}
-          ${
-            !userCorrection && !isCorrect
-              ? "hover:bg-blue-50 text-gray-800"
-              : ""
-          }
-        `}
+        ${isCorrect ? "text-emerald-800" : ""}
+        ${userCorrection && !isCorrect ? "text-red-800" : ""}
+        ${!userCorrection && !isCorrect ? "hover:bg-blue-50 text-gray-800" : ""}
+      `}
       >
-        {isEditing ? (
+        {isEditing && isWrongWord ? (
           <motion.input
             autoFocus
             value={userCorrection ?? word}
@@ -573,4 +599,3 @@ export default function TestPage() {
     </div>
   );
 }
-
