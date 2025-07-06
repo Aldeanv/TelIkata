@@ -14,18 +14,15 @@ import {
 } from "lucide-react";
 import { Sample, Difficulty, Correction } from "@/data/test";
 
-type NormalizedSample = Omit<Sample, "corrections"> & {
-  corrections: Record<string, Correction>;
-};
-
-// Helper functions
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 };
 
-// Animation variants
+const isValidLevel = (value: string | null): value is Difficulty =>
+  ["mudah", "menengah", "sulit"].includes(value ?? "");
+
 const wordVariants = {
   initial: { scale: 1 },
   hover: { scale: 1.05 },
@@ -72,28 +69,31 @@ const hintVariants = {
   },
 };
 
+type NormalizedSample = Omit<Sample, "corrections"> & {
+  corrections: Record<string, Correction>;
+};
+
 export default function TestPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawLevel = searchParams.get("level") as Difficulty | null;
-  const isValidLevel = (value: string | null): value is Difficulty =>
-    ["mudah", "menengah", "sulit"].includes(value ?? "");
+  const level = isValidLevel(searchParams.get("level"))
+    ? searchParams.get("level")!
+    : "mudah";
 
-  const level: Difficulty = isValidLevel(rawLevel) ? rawLevel : "mudah";
-
-  const [isLoading, setIsLoading] = useState(true);
   const [samples, setSamples] = useState<NormalizedSample[]>([]);
   const [sampleIndex, setSampleIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [timer, setTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const [finished, setFinished] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [corrections, setCorrections] = useState<{ [index: number]: string }>(
     {}
   );
   const [feedback, setFeedback] = useState<{ [index: number]: boolean }>({});
   const [clickedWords, setClickedWords] = useState<number[]>([]);
-  const [timer, setTimer] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(true);
-  const [finished, setFinished] = useState(false);
-  const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     const fetchSamples = async () => {
@@ -106,15 +106,10 @@ export default function TestPage() {
           for (const c of sample.corrections) {
             correctionMap[c.wordIndex.toString()] = c;
           }
-
-          return {
-            ...sample,
-            corrections: correctionMap,
-          };
+          return { ...sample, corrections: correctionMap };
         });
 
         setSamples(normalized);
-
         if (normalized.length > 0) {
           const randomIndex = Math.floor(Math.random() * normalized.length);
           setSampleIndex(randomIndex);
@@ -129,12 +124,9 @@ export default function TestPage() {
     fetchSamples();
   }, [level]);
 
-  // Timer effect
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isTimerRunning) {
-      interval = setInterval(() => setTimer((t) => t + 1), 1000);
-    }
+    if (!isTimerRunning) return;
+    const interval = setInterval(() => setTimer((t) => t + 1), 1000);
     return () => clearInterval(interval);
   }, [isTimerRunning]);
 
@@ -163,7 +155,6 @@ export default function TestPage() {
 
   const handleWordClick = (index: number) => {
     if (!isTimerRunning || finished) return;
-
     setClickedWords((prev) => (prev.includes(index) ? prev : [...prev, index]));
     if (sample.corrections[index]) {
       setEditingIndex(index);
@@ -172,7 +163,7 @@ export default function TestPage() {
     }
   };
 
-  const handleChange = (value: string) => {
+  const handleChangeCorrection = (value: string) => {
     if (editingIndex === null) return;
     const correction = sample.corrections[editingIndex];
     const expected = correction.correct.join(" ");
@@ -217,7 +208,6 @@ export default function TestPage() {
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
-
     setTimeout(() => router.push("/result"), 500);
   };
 
@@ -243,16 +233,20 @@ export default function TestPage() {
         }
         onClick={() => handleWordClick(index)}
         className={`relative cursor-pointer rounded-md transition
-        ${isCorrect ? "text-emerald-800" : ""}
-        ${userCorrection && !isCorrect ? "text-red-800" : ""}
-        ${!userCorrection && !isCorrect ? "hover:bg-blue-50 text-gray-800" : ""}
-      `}
+          ${isCorrect ? "text-emerald-800" : ""}
+          ${userCorrection && !isCorrect ? "text-red-800" : ""}
+          ${
+            !userCorrection && !isCorrect
+              ? "hover:bg-blue-50 text-gray-800"
+              : ""
+          }
+        `}
       >
         {isEditing && isWrongWord ? (
           <motion.input
             autoFocus
             value={userCorrection ?? word}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => handleChangeCorrection(e.target.value)}
             onBlur={() => setEditingIndex(null)}
             onKeyDown={(e) => e.key === "Enter" && setEditingIndex(null)}
             className="bg-white border-2 border-blue-400 rounded px-2 py-1 text-base focus:ring-2 focus:ring-blue-200 focus:outline-none transition min-w-[50px]"
