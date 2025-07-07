@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Clock, AlertTriangle } from "lucide-react";
-import { Sample } from "@/data/test";
+import { Sample, Correction } from "@/data/test";
 
 const wordVariants = {
   initial: { scale: 1 },
@@ -31,7 +31,6 @@ const inputVariants = {
     transition: { duration: 0.2 },
   },
 };
-
 
 export default function ChallengePage() {
   const router = useRouter();
@@ -66,8 +65,19 @@ export default function ChallengePage() {
           return;
         }
 
-        const randomIndex = Math.floor(Math.random() * data.length);
-        setSample(data[randomIndex]);
+        const raw = data[Math.floor(Math.random() * data.length)];
+
+        // Ubah corrections dari array → object (map by wordIndex)
+        const correctionMap: { [index: number]: Correction } = {};
+        for (const item of raw.corrections) {
+          correctionMap[item.wordIndex] = item;
+        }
+
+        setSample({
+          ...raw,
+          corrections: correctionMap,
+        });
+
         setTimeLeft(duration);
       } catch (err) {
         console.error("Gagal mengambil sample:", err);
@@ -150,9 +160,12 @@ export default function ChallengePage() {
 
   const handleWordClick = (index: number) => {
     if (!isTimerRunning || finished || !sample) return;
+
     if (!clickedWords.includes(index)) {
       setClickedWords((prev) => [...prev, index]);
     }
+
+    // Hanya kata dengan correction yang bisa di-edit
     if (sample.corrections[index]) {
       setEditingIndex(index);
     }
@@ -180,36 +193,124 @@ export default function ChallengePage() {
   };
 
   const isTimeLow = timeLeft <= 30;
-
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-300 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">Menyiapkan soal challenge...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-indigo-50">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center space-y-4"
+        >
+          <motion.div
+            animate={{
+              rotate: 360,
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              rotate: {
+                duration: 1.8,
+                repeat: Infinity,
+                ease: "linear",
+              },
+              scale: {
+                duration: 1.5,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+              },
+            }}
+            className="relative"
+          >
+            <div className="w-12 h-12 border-3 border-blue-400 border-t-transparent rounded-full"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-center space-y-1"
+          >
+            <h3 className="text-lg font-medium text-gray-700">
+              Menyiapkan Tes
+            </h3>
+            <p className="text-sm text-gray-400">Harap tunggu sebentar...</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: 120 }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="h-0.5 bg-gray-200 rounded-full overflow-hidden"
+          >
+            <div className="h-full bg-blue-400 w-1/3"></div>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
 
   if (!sample || noSample) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-center px-4">
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Soal Belum Tersedia</h2>
-          <p className="text-gray-500 mb-6">
-            Belum ada soal challenge yang bisa ditampilkan saat ini.
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-indigo-50 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", damping: 10, stiffness: 100 }}
+          className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 max-w-md w-full"
+        >
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            className="flex justify-center mb-6"
+          >
+            <div className="p-3 bg-blue-50 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </motion.div>
+
+          <h2 className="text-2xl font-semibold text-center text-gray-800 mb-3">
+            Soal Belum Tersedia
+          </h2>
+
+          <p className="text-gray-500 text-center mb-6 leading-relaxed">
+            Belum ada soal untuk tingkat{" "}
+            <span className="font-medium text-blue-500">Challenge</span>. Coba
+            tingkat kesulitan lain atau periksa kembali nanti.
           </p>
-          <button
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => router.push("/")}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200"
           >
             Kembali ke Beranda
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     );
   }
+
   const originalWords = sample.original.split(" ");
 
   return (
@@ -570,4 +671,3 @@ export default function ChallengePage() {
     </div>
   );
 }
-
