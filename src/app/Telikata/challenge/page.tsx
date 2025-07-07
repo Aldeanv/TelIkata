@@ -65,16 +65,16 @@ export default function ChallengePage() {
           return;
         }
 
-        const raw = data[Math.floor(Math.random() * data.length)];
+        const sample = data[Math.floor(Math.random() * data.length)];
 
         // Ubah corrections dari array → object (map by wordIndex)
         const correctionMap: { [index: number]: Correction } = {};
-        for (const item of raw.corrections) {
+        for (const item of sample.corrections) {
           correctionMap[item.wordIndex] = item;
         }
 
         setSample({
-          ...raw,
+          ...sample,
           corrections: correctionMap,
         });
 
