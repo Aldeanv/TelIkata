@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Difficulty } from "@/generated/prisma"; 
+import { Difficulty } from "@/generated/prisma";
 
 function isDifficulty(value: string | null): value is Difficulty {
-  return value === "mudah" || value === "menengah" || value === "sulit";
+  return (
+    value === "mudah" ||
+    value === "menengah" ||
+    value === "sulit" ||
+    value === "challenge"
+  );
 }
 
 export async function GET(request: Request) {
@@ -12,7 +17,10 @@ export async function GET(request: Request) {
 
   if (!isDifficulty(level)) {
     return NextResponse.json(
-      { error: "Invalid difficulty level. Harus salah satu dari: mudah, menengah, sulit." },
+      {
+        error:
+          "Invalid difficulty level. Harus salah satu dari: mudah, menengah, sulit.",
+      },
       { status: 400 }
     );
   }

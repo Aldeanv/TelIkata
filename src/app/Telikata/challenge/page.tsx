@@ -4,9 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Clock, AlertTriangle } from "lucide-react";
-import { sampleBank, Difficulty } from "@/data/test";
+import { Sample } from "@/data/test";
 
-// Animation variants
 const wordVariants = {
   initial: { scale: 1 },
   hover: { scale: 1.05 },
@@ -33,19 +32,18 @@ const inputVariants = {
   },
 };
 
-const level: Difficulty = "challenge";
-const samples = sampleBank[level];
 
 export default function ChallengePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawDuration = searchParams.get("duration") ?? "";
-
   const parsedDuration = parseInt(rawDuration || "", 10);
   const duration =
     !isNaN(parsedDuration) && parsedDuration > 0 ? parsedDuration * 60 : 5 * 60;
 
-  const [sampleIndex, setSampleIndex] = useState<number | null>(null);
+  const [sample, setSample] = useState<Sample | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [noSample, setNoSample] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [corrections, setCorrections] = useState<{ [index: number]: string }>(
     {}
@@ -57,16 +55,35 @@ export default function ChallengePage() {
   const [finished, setFinished] = useState(false);
 
   useEffect(() => {
-    const index = Math.floor(Math.random() * samples.length);
-    setSampleIndex(index);
-    setTimeLeft(duration);
+    const fetchSample = async () => {
+      try {
+        const res = await fetch("/api/samples?level=challenge");
+        const data: Sample[] = await res.json();
+
+        if (!data || data.length === 0) {
+          setNoSample(true);
+          setIsLoading(false);
+          return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * data.length);
+        setSample(data[randomIndex]);
+        setTimeLeft(duration);
+      } catch (err) {
+        console.error("Gagal mengambil sample:", err);
+        setNoSample(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSample();
   }, [duration]);
 
   const handleAutoSubmit = useCallback(() => {
-    if (sampleIndex === null) return;
-    const sample = samples[sampleIndex];
-    const originalWords = sample.original.split(" ");
+    if (!sample) return;
 
+    const originalWords = sample.original.split(" ");
     const totalErrors = Object.keys(sample.corrections).length;
     const correct = Object.values(feedback).filter(Boolean).length;
 
@@ -108,15 +125,7 @@ export default function ChallengePage() {
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
     setTimeout(() => router.push("/result"), 500);
-  }, [
-    sampleIndex,
-    feedback,
-    corrections,
-    clickedWords,
-    timeLeft,
-    duration,
-    router,
-  ]);
+  }, [sample, feedback, corrections, clickedWords, timeLeft, duration, router]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -139,12 +148,8 @@ export default function ChallengePage() {
     return () => clearInterval(interval);
   }, [isTimerRunning, handleAutoSubmit]);
 
-  if (sampleIndex === null) return null;
-  const sample = samples[sampleIndex];
-  const originalWords = sample.original.split(" ");
-
   const handleWordClick = (index: number) => {
-    if (!isTimerRunning || finished) return;
+    if (!isTimerRunning || finished || !sample) return;
     if (!clickedWords.includes(index)) {
       setClickedWords((prev) => [...prev, index]);
     }
@@ -154,7 +159,7 @@ export default function ChallengePage() {
   };
 
   const handleChange = (value: string) => {
-    if (editingIndex === null) return;
+    if (editingIndex === null || !sample) return;
     const correction = sample.corrections[editingIndex];
     const expected = correction.correct.join(" ");
     const isCorrect = value.trim() === expected;
@@ -175,6 +180,37 @@ export default function ChallengePage() {
   };
 
   const isTimeLow = timeLeft <= 30;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-300 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Menyiapkan soal challenge...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!sample || noSample) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-center px-4">
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">Soal Belum Tersedia</h2>
+          <p className="text-gray-500 mb-6">
+            Belum ada soal challenge yang bisa ditampilkan saat ini.
+          </p>
+          <button
+            onClick={() => router.push("/")}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+    );
+  }
+  const originalWords = sample.original.split(" ");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 py-8 sm:px-6 relative">
@@ -534,3 +570,4 @@ export default function ChallengePage() {
     </div>
   );
 }
+
