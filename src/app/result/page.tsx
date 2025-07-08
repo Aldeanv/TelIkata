@@ -101,12 +101,7 @@ export default function ResultPage() {
             {result.isChallengeMode ? (
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-700 text-sm rounded-full font-medium">
                 <Zap className="h-4 w-4" />
-                Mode Challenge
-                {result.duration && (
-                  <span className="ml-2 text-xs text-gray-500">
-                    ({Math.floor(result.duration / 60)} menit)
-                  </span>
-                )}
+                Mode Challenge - {result.difficulty}
               </div>
             ) : (
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 text-sm rounded-full font-medium">

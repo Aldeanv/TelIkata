@@ -11,7 +11,7 @@ import {
   Clock,
   ChevronRight,
 } from "lucide-react";
-import { Sample, Difficulty, Correction } from "@/data/test";
+import { ResultData, Explanation, Sample, Correction ,Difficulty } from "@/types/types";
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -299,9 +299,9 @@ export default function TestPage() {
             }
           : null;
       })
-      .filter(Boolean);
+      .filter((e): e is Explanation => e !== null);
 
-    const resultData = {
+    const resultData: ResultData = {
       time: timer,
       totalErrors,
       correct: correctedCount,
@@ -311,6 +311,7 @@ export default function TestPage() {
       corrected: correctedText,
       explanations,
       difficulty: level,
+      isChallengeMode: false,
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));

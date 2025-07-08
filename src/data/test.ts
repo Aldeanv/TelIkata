@@ -1,16 +1,4 @@
-export type Correction = {
-  correct: string[];
-  explanation: string;
-};
-
-export type Sample = {
-  original: string;
-  corrections: {
-    [index: number]: Correction;
-  };
-};
-
-export type Difficulty = "mudah" | "menengah" | "sulit" | "challenge";
+import { Sample, Difficulty } from "@/types/types";
 
 export const sampleBank: Record<Difficulty, Sample[]> = {
       mudah: [

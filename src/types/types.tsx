@@ -19,3 +19,17 @@ export interface ResultData {
   duration?: number;
   difficulty?: string;
 }
+
+export type Correction = {
+  correct: string[];
+  explanation: string;
+};
+
+export type Sample = {
+  original: string;
+  corrections: {
+    [index: number]: Correction;
+  };
+};
+
+export type Difficulty = "mudah" | "menengah" | "sulit" | "challenge";

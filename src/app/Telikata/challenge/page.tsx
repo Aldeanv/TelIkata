@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
 import { FileText, ArrowLeft, ChevronRight, Clock } from "lucide-react";
-import { Sample, Correction } from "@/data/test";
+import { ResultData , Explanation, Sample, Correction } from "@/types/types";
 
 const wordVariants = {
   initial: { scale: 1 },
@@ -282,9 +282,9 @@ export default function TestPage() {
             }
           : null;
       })
-      .filter(Boolean);
+    .filter((e): e is Explanation => e !== null);
 
-    const resultData = {
+    const resultData: ResultData = {
       time: timer,
       totalErrors,
       correct: correctedCount,
@@ -293,7 +293,8 @@ export default function TestPage() {
       original: sample.original,
       corrected: correctedText,
       explanations,
-      difficulty: duration,
+      difficulty: `${duration / 60} menit`,
+      isChallengeMode: true,
     };
 
     localStorage.setItem("siteliti_result", JSON.stringify(resultData));
