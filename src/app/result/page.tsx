@@ -13,11 +13,15 @@ import {
   Eye,
   FileText,
   Zap,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 export default function ResultPage() {
   const [result, setResult] = useState<ResultData | null>(null);
   const pathname = usePathname();
+  const [isOriginalExpanded, setOriginalExpanded] = useState(false);
+  const [isCorrectedExpanded, setCorrectedExpanded] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("siteliti_result");
@@ -57,21 +61,96 @@ export default function ResultPage() {
 
   const renderOriginalText = () => {
     const words = result.original.split(" ");
-    return words.map((word, index) => {
-      const isError = errorIndices.includes(index);
-      return (
-        <span key={index} className={isError ? "text-red-600 font-medium" : ""}>
-          {word}{" "}
-        </span>
-      );
-    });
+    const limit = 40;
+    const displayedWords = isOriginalExpanded ? words : words.slice(0, limit);
+
+    return (
+      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <div className="text-gray-800 leading-relaxed tracking-wide">
+          {displayedWords.map((word, index) => (
+            <span
+              key={index}
+              className={`
+              relative px-0.5
+              ${
+                errorIndices.includes(index)
+                  ? "text-red-600 font-medium bg-red-50 rounded"
+                  : "text-gray-700"
+              }
+            `}
+            >
+              {word}{" "}
+            </span>
+          ))}
+        </div>
+
+        {words.length > limit && (
+          <button
+            onClick={() => setOriginalExpanded(!isOriginalExpanded)}
+            className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center transition-colors"
+          >
+            {isOriginalExpanded ? (
+              <>
+                <ChevronUp className="h-4 w-4 mr-1" />
+                Tutup
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-4 w-4 mr-1" />
+                Selengkapnya
+              </>
+            )}
+          </button>
+        )}
+      </div>
+    );
   };
 
   const renderCorrectedText = () => {
     const words = result.corrected.split(" ");
-    return words.map((word, index) => {
-      return <span key={index}>{word} </span>;
-    });
+    const limit = 40;
+    const displayedWords = isCorrectedExpanded ? words : words.slice(0, limit);
+
+    return (
+      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <div className="text-gray-800 leading-relaxed tracking-wide">
+          {displayedWords.map((word, index) => (
+            <span
+              key={index}
+              className={`
+              relative px-0.5
+              ${
+                errorIndices.includes(index)
+                  ? "text-green-600 font-medium bg-green-50 rounded"
+                  : "text-gray-700"
+              }
+            `}
+            >
+              {word}{" "}
+            </span>
+          ))}
+        </div>
+
+        {words.length > limit && (
+          <button
+            onClick={() => setCorrectedExpanded(!isCorrectedExpanded)}
+            className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center transition-colors"
+          >
+            {isCorrectedExpanded ? (
+              <>
+                <ChevronUp className="h-4 w-4 mr-1" />
+                Tutup
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-4 w-4 mr-1" />
+                Selengkapnya
+              </>
+            )}
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -203,8 +282,6 @@ export default function ResultPage() {
   );
 }
 
-// Components
-
 const StatCard = ({
   icon,
   value,
@@ -214,7 +291,7 @@ const StatCard = ({
   icon: React.ReactNode;
   value: string;
   label: string;
-  color: "blue" | "emerald" | "violet" | "amber"; 
+  color: "blue" | "emerald" | "violet" | "amber";
 }) => {
   const colorMap = {
     blue: { bg: "bg-blue-50", text: "text-blue-600" },
@@ -247,7 +324,7 @@ const TextCard = ({
   title: string;
   content: React.ReactNode;
   icon: React.ReactNode;
-  badgeColor: "gray" | "emerald"; // ← ini perbaikannya
+  badgeColor: "gray" | "emerald";
 }) => {
   const colorMap = {
     gray: { bg: "bg-gray-100", text: "text-gray-600" },
