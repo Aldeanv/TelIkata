@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Difficulty } from "@/generated/prisma";
+import { Difficulty } from "@/types/types";
 
 function isDifficulty(value: string | null): value is Difficulty {
   return (
