@@ -3,15 +3,25 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Define types
+interface CorrectionData {
+  correct: string[];
+  explanation: string;
+}
+
+interface SampleData {
+  original: string;
+  corrections: Record<number, CorrectionData>;
+}
+
 // Contoh soal
-const samples = [
+const samples: SampleData[] = [
   {
     original: "Dia tinggal dikampung dan senang mempelajari Bahasa indonesia.",
     corrections: {
       2: {
         correct: ["di kampung"],
-        explanation:
-          "Penulisan yang benar adalah 'di kampung', bukan 'dikampung'.",
+        explanation: "Penulisan yang benar adalah 'di kampung', bukan 'dikampung'.",
       },
       7: {
         correct: ["Indonesia."],
@@ -40,9 +50,7 @@ export default function InteractiveDemo() {
   const originalWords = sample.original.split(" ");
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [corrections, setCorrections] = useState<{ [index: number]: string }>(
-    {}
-  );
+  const [corrections, setCorrections] = useState<{ [index: number]: string }>({});
   const [feedback, setFeedback] = useState<{ [index: number]: boolean }>({});
   const [clickedWords, setClickedWords] = useState<number[]>([]);
 
@@ -85,9 +93,7 @@ export default function InteractiveDemo() {
         : 0;
 
     const totalWords = originalWords.length;
-    const falseClicks = clickedWords.filter(
-      (i) => !sample.corrections[i]
-    ).length;
+    const falseClicks = clickedWords.filter((i) => !sample.corrections[i]).length;
 
     const visualAccuracy =
       totalWords > 0
@@ -100,10 +106,7 @@ export default function InteractiveDemo() {
   const { correctionAccuracy, visualAccuracy } = getAccuracyMetrics();
 
   return (
-    <section
-      id="demo"
-      className="py-16 bg-gradient-to-br from-gray-50 to-blue-50"
-    >
+    <section id="demo" className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -169,9 +172,7 @@ export default function InteractiveDemo() {
                         value={userCorrection ?? word}
                         onChange={(e) => handleChange(e.target.value)}
                         onBlur={() => setEditingIndex(null)}
-                        onKeyDown={(e) =>
-                          e.key === "Enter" && setEditingIndex(null)
-                        }
+                        onKeyDown={(e) => e.key === "Enter" && setEditingIndex(null)}
                         className="bg-white border border-gray-300 px-2 py-1 rounded w-auto text-base focus:ring-2 focus:ring-indigo-300 focus:outline-none transition duration-150"
                       />
                     ) : (
@@ -225,25 +226,19 @@ export default function InteractiveDemo() {
         <div className="mt-8 flex justify-center">
           <div className="inline-flex bg-white rounded-lg shadow p-2">
             <div className="px-4 py-2 text-center border-r border-gray-100">
-              <p className="text-sm font-medium text-gray-500">
-                Kata Diperbaiki
-              </p>
+              <p className="text-sm font-medium text-gray-500">Kata Diperbaiki</p>
               <p className="text-xl font-semibold text-indigo-600">
                 {Object.keys(corrections).length}
               </p>
             </div>
             <div className="px-4 py-2 text-center border-r border-gray-100">
-              <p className="text-sm font-medium text-gray-500">
-                Akurasi Koreksi
-              </p>
+              <p className="text-sm font-medium text-gray-500">Akurasi Koreksi</p>
               <p className="text-xl font-semibold text-indigo-600">
                 {correctionAccuracy}%
               </p>
             </div>
             <div className="px-4 py-2 text-center">
-              <p className="text-sm font-medium text-gray-500">
-                Akurasi Ketepatan
-              </p>
+              <p className="text-sm font-medium text-gray-500">Akurasi Ketepatan</p>
               <p className="text-xl font-semibold text-indigo-600">
                 {visualAccuracy}%
               </p>
