@@ -111,7 +111,7 @@ export default function TestPage() {
 
         const normalized: NormalizedSample[] = data.map((sample) => {
           const correctionMap: Record<string, Correction> = {};
-          for (const c of sample.corrections) {
+          for (const c of Object.values(sample.corrections)) {
             correctionMap[c.wordIndex.toString()] = c;
           }
           return { ...sample, corrections: correctionMap };

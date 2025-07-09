@@ -23,6 +23,7 @@ export interface ResultData {
 export type Correction = {
   correct: string[];
   explanation: string;
+  wordIndex:string;
 };
 
 export type Sample = {
