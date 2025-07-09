@@ -342,7 +342,7 @@ const TextCard = ({
         <h3 className="font-medium text-gray-700 text-sm">{title}</h3>
       </div>
       <div className="p-4 bg-gray-50">
-        <p className="text-gray-800 text-sm leading-relaxed">{content}</p>
+        <div className="text-gray-800 text-sm leading-relaxed">{content}</div>
       </div>
     </div>
   );
