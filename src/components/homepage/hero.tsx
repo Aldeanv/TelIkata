@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 
 export default function Hero() {
+  const handleClick = () => {
+    const url = `http://localhost:3000/Telikata/{mode}/{level}`;
+    window.location.href = url;
+  };
+
   return (
     <section id="hero" className="relative bg-white py-16 overflow-hidden">
       {/* Background Blur Shapes */}
@@ -73,9 +78,9 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex justify-center"
         >
-          <a
-            href="/Telikata/[mode]/[level]"
-            className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-indigo-200 flex items-center gap-2"
+          <button
+            onClick={handleClick}
+            className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition duration-200 shadow-md hover:shadow-indigo-200 flex items-center gap-2 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +95,7 @@ export default function Hero() {
               />
             </svg>
             Coba Sekarang
-          </a>
+          </button>
         </motion.div>
       </div>
     </section>
