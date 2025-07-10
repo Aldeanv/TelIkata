@@ -102,11 +102,11 @@ function NormalModeSection({
 }) {
   const descriptions: Record<Difficulty, string> = {
     Mudah:
-      "Teks pendek dengan 3–5 kesalahan. Cocok untuk pemula atau pemanasan.",
+      "Teks pendek dengan 4–6 kesalahan. Cocok untuk pemula atau pemanasan.",
     Menengah:
-      "Teks sedang dengan 6–8 kesalahan. Cocok untuk latihan fokus dan akurasi.",
+      "Teks sedang dengan 6–10 kesalahan. Cocok untuk latihan fokus dan akurasi.",
     Sulit:
-      "Teks panjang tanpa informasi jumlah kesalahan. Cocok untuk penguji ketelitian tingkat lanjut.",
+      "Teks panjang dengan 7–15 kesalahan. Cocok untuk penguji ketelitian tingkat lanjut.",
   };
 
   return (
@@ -144,7 +144,7 @@ function NormalModeSection({
           <Feature
             icon="🖱️"
             title="Klik-Kata Aktif"
-            desc="Semua kata bisa diklik untuk dikoreksi. Hanya koreksi yang benar yang dihitung sebagai skor."
+            desc="Teliti sebelum klik! Hanya kata yang salah bisa dikoreksi. Jika kamu klik kata yang benar, nilaimu bisa turun."
           />
           <Feature
             icon="⏱️"
@@ -207,7 +207,7 @@ function ChallengeModeSection({
       <div className="space-y-4 text-gray-700">
         <div className="p-4 bg-pink-50 rounded-lg font-medium">
           Temukan dan perbaiki sebanyak mungkin kesalahan dalam waktu{" "}
-          {selectedTime} menit. Tidak ada bantuan, tidak ada petunjuk.
+          {selectedTime} menit.
         </div>
 
         <div className="space-y-3">
