@@ -5,7 +5,7 @@ import { Typewriter } from "react-simple-typewriter";
 
 export default function Hero() {
   const handleClick = () => {
-    const url = `http://localhost:3000/Telikata/{mode}/{level}`;
+    const url = `https://telikata.vercel.app/Telikata/{mode}/{level}`;
     window.location.href = url;
   };
 
