@@ -37,7 +37,7 @@ const samples: SampleData[] = [
         explanation: "Tidak perlu koma setelah 'apel'.",
       },
       4: {
-        correct: ["jeruk,", "dan"],
+        correct: ["jeruk,"],
         explanation: "Gunakan koma sebelum 'dan' dalam daftar.",
       },
     },
